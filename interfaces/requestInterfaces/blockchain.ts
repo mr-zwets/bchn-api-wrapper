@@ -1,10 +1,10 @@
 /* --- Blockchain Commands --- */
-// progress 5/33
+// progress 9/33
 
-export interface GetBlockCount {
-  method: 'getblockcount';
+export interface GetBestBlockHash {
+  method: 'getbestblockhash';
   params: [];
-  response: number;
+  response: string;
 }
 
 // TODO: type verbose result
@@ -15,6 +15,41 @@ export interface GetBlock {
     verbosity?: number
   ];
   response: string | any;
+}
+
+export interface GetBlockCount {
+  method: 'getblockcount';
+  params: [];
+  response: number;
+}
+
+export interface GetBlockHash {
+  method: 'getblockhash';
+  params: [number];
+  response: string;
+}
+
+export interface GetChainTxStats {
+  method: 'getchaintxstats';
+  params: [
+    nblocks?: number,
+    blockhash?: string
+  ];
+  response: {
+    time: number;
+    txcount: number;
+    window_final_block_hash: string;
+    window_block_count: number;
+    window_tx_count: number | undefined;
+    window_interval: number | undefined;
+    txrate: number;
+  }
+}
+
+export interface GetDifficulty {
+  method: 'getdifficulty';
+  params: [];
+  response: number;
 }
 
 interface GetDsProofBase {

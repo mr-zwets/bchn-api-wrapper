@@ -19,7 +19,7 @@ export interface RpcClientHostConfig extends BaseRpcClientConfig {
 
 export type RpcClientConfig = RpcClientUrlConfig | RpcClientHostConfig
 
-export type RPCParameter = string | number | boolean | null;
+export type RPCParameter = string | number | boolean | undefined;
 declare type RequestResponse = object | string | number | boolean | null | RequestResponse[];
 
 export interface RpcRequest {
@@ -27,3 +27,12 @@ export interface RpcRequest {
   params: Array<RPCParameter>;
   response: RequestResponse;
 }
+
+
+export type formatOptions = 'bin' | 'hex' | 'json'
+
+// Conditional type to return the appropriate data type based on format
+export type ResponseType<TFormat extends formatOptions, TJson> = 
+  TFormat extends 'json' ? TJson :
+  TFormat extends 'hex' | 'bin' ? string :
+  never;

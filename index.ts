@@ -3,6 +3,7 @@ import { getRandomId, validateAndConstructUrl } from "./utils/utils";
 import { RetryLimitExceededError } from "./utils/errors";
 
 export * from './interfaces/interfaces.ts'
+export * from './interfaces/requestInterfaces/index.ts'
 
 export class BchnRpcClient {
   private url: string

@@ -1,0 +1,10 @@
+{
+  "name": "bchn-rpc",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.7.7"
+  }
+}

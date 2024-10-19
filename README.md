@@ -19,15 +19,18 @@ yarn add
 ### Example
 
 ```ts
-import { BchnRpcClient, RpcClientConfig } from 'bchn-rpc'
+import { BchnRpcClient, RpcClientConfig, GetBlockCount } from 'bchn-rpc'
 
 // Instead of the url it's also possible to privide the protocol, host and port separately
-// See the interface for more configuarables
+// See the interface for more configuarables (logger, timeoutMs, retryDelayMs, maxRetries)
 const clientOptions: RpcClientConfig = {
-  url = "http://localhost:8332",
+  url: "http://localhost:8332",
   rpcUser: "rpcUser",
   rpcPassword: "rpcPassword"
 }
 
 const client = new BchnRpcClient(clientOptions);
+const blockHeight = await client.request<GetBlockCount>("getblockcount")
+
+console.log(`The current blockHeight is ${blockHeight}`)
 ```

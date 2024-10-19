@@ -2,7 +2,9 @@ import { RpcClientConfig, RpcRequest } from "./interfaces/interfaces";
 import { getRandomId, validateAndConstructUrl } from "./utils/utils";
 import { RetryLimitExceededError } from "./utils/errors";
 
-export default class BchnRpcClient {
+export * from './interfaces/interfaces.ts'
+
+export class BchnRpcClient {
   private url: string
   private rpcUser: string
   private rpcPassword: string

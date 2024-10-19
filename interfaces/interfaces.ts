@@ -19,20 +19,6 @@ export interface RpcClientHostConfig extends BaseRpcClientConfig {
 
 export type RpcClientConfig = RpcClientUrlConfig | RpcClientHostConfig
 
-export interface ListUnspentItem {
-  txid: string;
-  vout: number;
-  address: string;
-  label: string;
-  scriptPubKey: string;
-  amount: number;
-  confirmations: number;
-  redeemScript: string;
-  spendable: boolean;
-  solvable: boolean;
-  safe: boolean;
-}
-
 export type RPCParameter = string | number | boolean | null;
 declare type RequestResponse = object | string | number | boolean | null | RequestResponse[];
 
@@ -42,20 +28,71 @@ export interface RpcRequest {
   response: RequestResponse;
 }
 
-/*
-  async listUnspent(): Promise<ListUnspentItem>{
-    return {}
+interface TokenData {
+  category : string;
+  amount: string;
+  nft?: {
+    capability: 'none' | 'mutable' | 'minting';
+    commitment: string;
   }
+}
 
-  async getBlockHeight(): Promise<number> {
-    return 0
-  }
+export interface ListUnspentItem {
+  txid: string;
+  vout: number;
+  address: string;
+  label: string;
+  scriptPubKey: string;
+  amount: number;
+  tokenData?: TokenData;
+  confirmations: number;
+  redeemScript: string;
+  spendable: boolean;
+  solvable: boolean;
+  safe: boolean;
+}
 
-  async getRawTransaction(txid: string, verbose?: boolean, blockHash?: string): Promise<string> {
-    return "";
-  }
+export interface ListUnspent {
+  method: 'listunspent';
+  params: [
+    minconf?: number,
+    maxconf?: number,
+    addresses?: string[],
+    include_unsafe?: boolean,
+    query_options?: {
+      minimumAmount?: number | string;
+      maximumAmount?: number | string;
+      maximumCount?: number;
+      minimumSumAmount?: number | string;
+      includeTokens?: boolean;
+      tokensOnly?: boolean;
+    }
+  ];
+  response: ListUnspentItem[];
+}
 
-  async sendRawTransaction(hexString: string, allowHighFees?: boolean): Promise<string> {
-    return "";
-  }
-*/
+export interface GetBlockCount {
+  method: 'getblockcount';
+  params: [];
+  response: number;
+}
+
+// TODO: type verbose result
+export interface GetRawTransaction {
+  method: 'getrawtransaction';
+  params: [
+    txid: string,
+    verbose?: boolean | number,
+    blockhash?: string
+  ];
+  response: string | any;
+}
+
+export interface SendRawTransaction {
+  method: 'sendrawtransaction';
+  params: [
+    hexstring: string,
+    allowhighfees?: boolean
+  ];
+  response: string;
+}

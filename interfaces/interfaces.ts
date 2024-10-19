@@ -96,3 +96,69 @@ export interface SendRawTransaction {
   ];
   response: string;
 }
+
+// TODO: type verbose result
+export interface GetBlock {
+  method: 'getblock';
+  params: [
+    blockhash: string,
+    verbosity?: number
+  ];
+  response: string | any;
+}
+
+export interface DumpPrivKey {
+  method: 'dumpprivkey';
+  params: [
+    address: string,
+  ];
+  response: string;
+}
+
+export interface GetNewAddress {
+  method: 'getnewaddress';
+  params: [
+    label?: string,
+  ];
+  response: string;
+}
+
+export interface GetBalance {
+  method: 'getbalance';
+  params: [
+    dummy?: string,
+    minconf?: number,
+    include_watchonly?: boolean
+  ];
+  response: number;
+}
+
+export interface ImportAddress {
+  method: 'importaddress';
+  params: [
+    address: string,
+    label?: string,
+    rescan?: boolean,
+    p2sh?: boolean
+  ];
+  response: number;
+}
+
+export interface Generate {
+  method: 'generate';
+  params: [
+    nblocks: number,
+    maxtries?: number,
+  ];
+  response: string[];
+}
+
+export interface GenerateToAddress {
+  method: 'generatetoaddress';
+  params: [
+    nblocks: number,
+    address: string,
+    maxtries?: number,
+  ];
+  response: string[];
+}

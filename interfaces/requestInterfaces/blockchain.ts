@@ -1,5 +1,5 @@
 /* --- Blockchain Commands --- */
-// progress 9/33
+// progress 11/33
 
 export interface GetBestBlockHash {
   method: 'getbestblockhash';
@@ -7,14 +7,71 @@ export interface GetBestBlockHash {
   response: string;
 }
 
-// TODO: type verbose result
-export interface GetBlock {
+interface GetBlockBase {
   method: 'getblock';
   params: [
     blockhash: string,
     verbosity?: number
   ];
-  response: string | any;
+}
+
+// Verbosity = 0 (or false)
+export interface GetBlockVerbosity0 extends GetBlockBase {
+  response: string
+}
+
+// Verbosity = 1 (or true)
+export interface GetBlockVerbosity1 extends GetBlockBase {
+  response: {
+    hash: string;
+    confirmations: number;
+    size: number;
+    height: number;
+    version: number;
+    versionHex: string;
+    merkleroot: string;
+    tx : string[]
+    time: number;
+    mediantime: number;
+    nonce: number;
+    bits: string;
+    difficulty: number;
+    chainwork: string;
+    nTx: number;
+    previousblockhash: string;
+    nextblockhash: string;
+    ablastate: {
+      epsilon: number;
+      beta: number;
+      blocksize: number;
+      blocksizelimit: number;
+      nextblocksizelimit: number;
+    }
+  }
+}
+
+// TODO: type Verbosity2, Verbosity3
+
+export interface GetBlockchainInfo {
+  method: 'getblockchaininfo';
+  params: [];
+  response: {
+    chain: 'main' | 'test' | 'regtest';
+    blocks: number;
+    headers: number;
+    bestblockhash: string;
+    difficulty: number;
+    mediantime: number;
+    verificationprogress: number;
+    initialblockdownload: boolean;
+    chainwork: string;
+    size_on_disk: number;
+    pruned: boolean;
+    pruneheight: number;
+    automatic_pruning: boolean;
+    prune_target_size?: number;
+    warnings: string;
+  }
 }
 
 export interface GetBlockCount {
@@ -174,4 +231,18 @@ export interface GetDsProofScore {
     txid: string
   ];
   response: number;
+}
+
+export interface GetMempoolInfo {
+  method: 'getmempoolinfo';
+  params: [];
+  response: {
+    loaded: boolean;
+    size: number;
+    bytes: number;
+    usage: number;
+    maxmempool: number;
+    mempoolminfee: number;
+    minrelaytxfee: number;
+  }
 }

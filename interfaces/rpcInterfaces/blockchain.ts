@@ -1,5 +1,5 @@
 /* --- Blockchain Commands --- */
-// progress 25/33
+// progress 33/33
 
 import { TokenData } from "../interfaces";
 
@@ -504,6 +504,85 @@ export interface GetTxOutSetInfo {
     disk_size: number;
     total_amount: number;
   }
+}
+
+export interface InvalidateBlock {
+  method: 'invalidateblock';
+  params: [
+    blockhash: string
+  ];
+  response: null;
+}
+
+export interface ParkBlock {
+  method: 'parkblock';
+  params: [
+    blockhash: string
+  ];
+  response: null;
+}
+
+export interface PreciousBlock {
+  method: 'preciousblock';
+  params: [
+    blockhash: string
+  ];
+  response: null;
+}
+
+export interface PruneBlockchain {
+  method: 'pruneblockchain';
+  params: [
+    height: number
+  ];
+  response: number;
+}
+
+export interface ReconsiderBlock {
+  method: 'reconsiderblock';
+  params: [
+    blockhash: string
+  ];
+  response: null;
+}
+
+export interface SaveMempool {
+  method: 'savemempool';
+  params: [];
+  response: null;
+}
+
+export interface ScanTxOutSet {
+  method: 'scantxoutset';
+  params: [
+    action: 'start' | 'abort' | 'status',
+    scanobjects?: Array<string | {
+      desc: string;
+      range?: number;
+    }>
+  ];
+  response: {
+    unspents: Array<{
+      txid: string;
+      vout: number;
+      scriptPubKey: string;
+      amount: number;
+      height: number;
+      tokenData?: TokenData;
+    }>;
+    total_amount: number;
+    token_total_amount?: {
+      [category: string]: string;
+    };
+  } | boolean;
+}
+
+export interface UnparkBlock {
+  method: 'unparkblock';
+  params: [
+    blockhash: string
+  ];
+  response: null;
 }
 
 export interface VerifyChain {

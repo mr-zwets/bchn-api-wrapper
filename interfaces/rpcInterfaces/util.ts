@@ -1,5 +1,17 @@
 /* --- Util Commands --- */
-// progress 4/5
+// progress 5/5
+
+export interface CreateMultisig {
+  method: 'createmultisig';
+  params: [
+    nrequired: number,
+    keys: string[]
+  ];
+  response: {
+    address: string;
+    redeemScript: string;
+  };
+}
 
 export interface EstimateFee {
   method: 'estimatefee';

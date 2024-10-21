@@ -62,7 +62,7 @@ console.log(`mempool size is currently ${mempoolInfo.bytes} bytes`)
 
 The `BchnRpcClient` is a thin type-wrapper over the actual RPC endpoints, because of this you can always use all RPC functionality through the library. For a complete list of all BCHN RPC-endpoints see the [RPC documentation](https://docs.bitcoincashnode.org/doc/json-rpc/).
 
-The library currently exports types for `79/137` RPC methods.
+The library currently exports types for `92/137` RPC methods.
 
 ### RPC example
 

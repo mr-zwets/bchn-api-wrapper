@@ -1,7 +1,15 @@
 /* --- Rawtransactions Commands --- */
-// progress 5/14
+// progress 7/14
 
 import { TxDetailsBlock } from "../restInterfaces/interfaces";
+
+export interface CombinePsbt {
+  method: 'decoderawtransaction';
+  params: [
+    txs: string[]
+  ];
+  response: string
+}
 
 export interface DecodeRawTransaction {
   method: 'decoderawtransaction';
@@ -23,6 +31,19 @@ export interface DecodeScript {
     addresses: string[]
     p2sh: string;
   };
+}
+
+export interface FinalizePsbt {
+  method: 'finalizepsbt';
+  params: [
+    psbt: string,
+    extract?: boolean
+  ];
+  response: {
+    psbt: string;
+    hex: string;
+    complete: boolean;
+  }
 }
 
 interface GetRawTransactionBase {

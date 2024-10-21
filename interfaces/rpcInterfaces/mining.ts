@@ -1,5 +1,78 @@
 /* --- Mining Commands --- */
-// progress 7/9
+// progress 9/9
+
+export interface GetBlockTemplate {
+  method: 'getblocktemplate';
+  params: {
+    mode?: 'template' | 'proposal';
+    capabilities?: ('longpoll' | 'coinbasetxn' | 'coinbasevalue' | 'proposal' | 'serverlist' | 'workid')[];
+    longpollid?: string;
+    checkvalidity?: boolean;
+    ignorecache?: boolean;
+  };
+  response: {
+    version: number;
+    previousblockhash: string;
+    transactions: {
+      data: string;
+      txid: string;
+      hash: string;
+      depends: number[];
+      fee: number;
+      sigops: number;
+      required: boolean;
+    }[];
+    coinbaseaux: {
+      flags: string;
+    };
+    coinbasevalue: number;
+    coinbasetxn?: object;
+    target: string;
+    mintime: number;
+    mutable: string[];
+    noncerange: string;
+    sigoplimit: number;
+    sizelimit: number;
+    curtime: number;
+    bits: string;
+    height: number;
+  }
+}
+
+export interface GetBlockTemplateLight {
+  method: 'getblocktemplatelight';
+  params: [
+    {
+      mode?: 'template' | 'proposal';
+      capabilities?: ('longpoll' | 'coinbasetxn' | 'coinbasevalue' | 'proposal' | 'serverlist' | 'workid')[];
+      longpollid?: string;
+      checkvalidity?: boolean;
+      ignorecache?: boolean;
+    },
+    additional_txs?: string[]
+  ];
+  response: {
+    version: number;
+    previousblockhash: string;
+    job_id: string;
+    merkle: string[];
+    coinbaseaux: {
+      flags: string;
+    };
+    coinbasevalue: number;
+    coinbasetxn: object;
+    target: string;
+    mintime: number;
+    mutable: string[];
+    noncerange: string;
+    sigoplimit: number;
+    sizelimit: number;
+    curtime: number;
+    bits: string;
+    height: number;
+  };
+}
+
 
 export interface GetMiningInfo {
   method: 'getmininginfo';

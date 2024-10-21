@@ -1,5 +1,5 @@
 /* --- Wallet Commands --- */
-// progress 9/53
+// progress 11/53
 
 import { TokenData } from "../interfaces";
 
@@ -11,12 +11,33 @@ export interface DumpPrivKey {
   response: string;
 }
 
-export interface GetNewAddress {
-  method: 'getnewaddress';
-  params: [
-    label?: string,
-  ];
-  response: string;
+export interface GetAddressInfo {
+  method: 'getaddressinfo';
+  params: [string];
+  response: {
+    address: string;
+    scriptPubKey: string;
+    ismine: boolean;
+    iswatchonly: boolean;
+    isscript: boolean;
+    ischange: boolean;
+    script?: 'nonstandard' | 'pubkey' | 'pubkeyhash' | 'scripthash' | 'multisig' | 'nulldata';
+    hex?: string;
+    pubkeys?: string[];
+    sigsrequired?: number;
+    pubkey?: string;
+    embedded?: object;
+    iscompressed: boolean;
+    label: string;
+    timestamp?: number;
+    hdkeypath?: string;
+    hdseedid?: string;
+    hdmasterkeyid?: string;
+    labels: {
+      name: string;
+      purpose: 'send' | 'receive';
+    }[];
+  };
 }
 
 export interface GetBalance {
@@ -25,6 +46,23 @@ export interface GetBalance {
     dummy?: string,
     minconf?: number,
     include_watchonly?: boolean
+  ];
+  response: number;
+}
+
+export interface GetNewAddress {
+  method: 'getnewaddress';
+  params: [
+    label?: string,
+  ];
+  response: string;
+}
+
+export interface GetReceivedByAddress {
+  method: 'getreceivedbyaddress';
+  params: [
+    address: string,
+    minconf?: number
   ];
   response: number;
 }

@@ -1,5 +1,5 @@
 import { formatOptions, ResponseType } from "./interfaces/interfaces";
-import { ChainInfo, MempoolContent, MempoolInfo, TxDetails } from "./interfaces/restInterfaces/interfaces";
+import { BlockInfoNoTxDetails, ChainInfo, HeaderInfo, MempoolContent, MempoolInfo, TxDetails, UtxosInfo } from "./interfaces/restInterfaces/interfaces";
 
 export class BchnRestClient {
   private baseUrl: string;
@@ -31,19 +31,20 @@ export class BchnRestClient {
     return this.fetchFromNode<TxDetails, TFormat>(`tx/${txid}.${format}`, format);
   }
 
+  // TODO: add type BlockInfoTxDetails
   // Get block details by block hash
   async getBlock<TFormat extends formatOptions = 'json'>(
     blockhash: string, includeTxDetails: boolean, format:TFormat = 'json' as TFormat
   ) {
     const path = includeTxDetails ? 'block' : 'block/notxdetails'
-    return this.fetchFromNode<object, TFormat>(`${path}/${blockhash}.${format}`, format);
+    return this.fetchFromNode<BlockInfoNoTxDetails, TFormat>(`${path}/${blockhash}.${format}`, format);
   }
 
   // Get block headers starting from a specific block hash
   async getBlockHeaders<TFormat extends formatOptions = 'json'>(
     count: number, blockhash: string, format:TFormat = 'json' as TFormat
   ) {
-    return this.fetchFromNode<object, TFormat>(`headers/${count}/${blockhash}.${format}`, format);
+    return this.fetchFromNode<HeaderInfo, TFormat>(`headers/${count}/${blockhash}.${format}`, format);
   }
 
   // Get chain info (chain state details)
@@ -55,8 +56,9 @@ export class BchnRestClient {
   async getUTXOs<TFormat extends formatOptions = 'json'>(
     checkmempool: boolean, outpoints: string[], format:TFormat = 'json' as TFormat
   ) {
-    const endpoint = `getutxos/${checkmempool ? 'checkmempool' : 'nocheckmempool'}/${outpoints.join('/')}.${format}`;
-    return this.fetchFromNode<any, TFormat>(endpoint, format);
+    const path = (checkmempool ? 'checkmempool/' : '') + outpoints.join('/');
+    const endpoint = `getutxos/${path}.${format}`;
+    return this.fetchFromNode<UtxosInfo, TFormat>(endpoint, format);
   }
 
   // Get mempool information (basic)

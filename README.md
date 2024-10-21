@@ -35,7 +35,7 @@ const restClient = new BchnRestClient("http://localhost:8332")
 
 // Fetch mempool information and log the size
 const mempoolInfo = await restClient.getMempoolInfo()
-console.log(`mempool size is currently ${mempoolInfo.bytes}`)
+console.log(`mempool size is currently ${mempoolInfo.bytes} bytes`)
 ```
 
 ## RPC usage

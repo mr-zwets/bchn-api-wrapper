@@ -1,5 +1,5 @@
 /* --- Mining Commands --- */
-// progress 4/9
+// progress 7/9
 
 export interface GetMiningInfo {
   method: 'getmininginfo';
@@ -24,6 +24,33 @@ export interface GetNetworkHashps {
     height?: number
   ];
   response: number
+}
+
+export interface PrioritiseTransaction {
+  method: 'prioritisetransaction';
+  params: [
+    txid: string,
+    fee_delta: number
+  ];
+  response: true
+}
+
+export interface SubmitBlock {
+  method: 'submitblock';
+  params: [
+    hexdata: string,
+    dummy?: string
+  ];
+  response: {}
+}
+
+export interface SubmitBlockLight {
+  method: 'submitblocklight';
+  params: [
+    hexdata: string,
+    job_id: string
+  ];
+  response: {}
 }
 
 export interface SubmitHeader {

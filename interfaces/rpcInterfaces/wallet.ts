@@ -1,5 +1,5 @@
 /* --- Wallet Commands --- */
-// progress 7/53
+// progress 9/53
 
 import { TokenData } from "../interfaces";
 
@@ -26,6 +26,12 @@ export interface GetBalance {
     minconf?: number,
     include_watchonly?: boolean
   ];
+  response: number;
+}
+
+export interface GetUnconfirmedBalance {
+  method: 'getunconfirmedbalance';
+  params: [];
   response: number;
 }
 
@@ -99,4 +105,18 @@ export interface ListWallets {
   method: 'importaddress';
   params: [];
   response: string[];
+}
+
+export interface SendToAddress {
+  method: 'sendtoaddress';
+  params: [
+    address: string,
+    amount: number | string,
+    comment?: string,
+    comment_to?: string,
+    subtractfeefromamount?: boolean,
+    coinsel?: number,
+    include_unsafe?: boolean
+  ];
+  response: string;
 }

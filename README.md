@@ -16,6 +16,26 @@ The `BchnRestClient` uses a class with unique methods for each of the endpoints.
 
 The `BchnRpcClient` uses a request function which uses generics to type arguments and responses.
 
+## Configuration
+
+To use the RPC and REST APIs on your BCHN node, you need to enable them in your node's configuration file.
+
+<details>
+  <summary>BCHN Configuration</summary>
+  In the BCHN `.conf` file add the following settings:
+
+  ```
+    server=1
+    rest=1
+    rpcuser=rpcuser
+    rpcpassword=rpcpassword
+    rpcallowip=127.0.0.1
+    rpcport=8332
+  ```
+
+  To learn more about the `.conf` settings, see the [official documentation](https://docs.bitcoincashnode.org/doc/bitcoin-conf/).
+</details>
+
 ## Install
 
 For now, you can clone the library locally.

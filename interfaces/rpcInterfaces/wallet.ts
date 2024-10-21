@@ -1,5 +1,5 @@
 /* --- Wallet Commands --- */
-// progress 11/53
+// progress 12/53
 
 import { TokenData } from "../interfaces";
 
@@ -143,6 +143,22 @@ export interface ListWallets {
   method: 'importaddress';
   params: [];
   response: string[];
+}
+
+export interface SendMany {
+  method: 'sendmany';
+  params: [
+    dummy: string,
+    amounts: {
+      [address: string]: number | string
+    },
+    minconf?: number,
+    comment?: string,
+    subtractfeefrom?: string[],
+    coinsel?: number,
+    include_unsafe?: boolean
+  ];
+  response: string;
 }
 
 export interface SendToAddress {

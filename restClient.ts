@@ -1,5 +1,5 @@
 import { formatOptions, ResponseType } from "./interfaces/interfaces";
-import { BlockInfoNoTxDetails, ChainInfo, HeaderInfo, MempoolContent, MempoolInfo, TxDetails, UtxosInfo } from "./interfaces/restInterfaces/interfaces";
+import { BlockInfoNoTxDetails, BlockInfoTxDetails, ChainInfo, HeaderInfo, MempoolContent, MempoolInfo, TxDetails, UtxosInfo } from "./interfaces/restInterfaces/interfaces";
 
 export class BchnRestClient {
   private baseUrl: string;
@@ -31,13 +31,22 @@ export class BchnRestClient {
     return this.fetchFromNode<TxDetails, TFormat>(`tx/${txid}.${format}`, format);
   }
 
-  // TODO: add type BlockInfoTxDetails
-  // Get block details by block hash
+  // getBlock overload signatures 
+  // This is needed so the getBlock return type can depend on the 'includeTxDetails' boolean flag
+  async getBlock<TFormat extends formatOptions = 'json'>(
+    blockhash: string, includeTxDetails: true, format?:TFormat
+  ): Promise<TFormat extends 'json' ? BlockInfoTxDetails : string>;
+
+  async getBlock<TFormat extends formatOptions = 'json'>(
+    blockhash: string, includeTxDetails: false, format?:TFormat
+  ): Promise<TFormat extends 'json' ? BlockInfoNoTxDetails : string>;
+
+  // getBlock Implementation
   async getBlock<TFormat extends formatOptions = 'json'>(
     blockhash: string, includeTxDetails: boolean, format:TFormat = 'json' as TFormat
-  ) {
-    const path = includeTxDetails ? 'block' : 'block/notxdetails'
-    return this.fetchFromNode<BlockInfoNoTxDetails, TFormat>(`${path}/${blockhash}.${format}`, format);
+  ): Promise<any> {
+    const path = includeTxDetails ? 'block' : 'block/notxdetails';
+    return this.fetchFromNode(`${path}/${blockhash}.${format}`, format);
   }
 
   // Get block headers starting from a specific block hash

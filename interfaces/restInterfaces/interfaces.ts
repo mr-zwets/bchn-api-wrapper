@@ -25,6 +25,39 @@ export interface BlockInfoNoTxDetails {
   }
 }
 
+export interface BlockInfoTxDetails extends Omit<BlockInfoNoTxDetails, 'tx'>{
+  tx: TxDetailsBlock[]
+}
+
+export interface TxDetailsBlock {
+  txid: string;
+  hash: string;
+  version: number;
+  size: number;
+  locktime: number;
+  vin:{
+    txid: string;
+    vout: number;
+    scriptSig: {
+      asm: string;
+      hex: string;
+    },
+    sequence: number;
+  }[]
+  vout: {
+    value: number;
+    n: number;
+    scriptPubKey: {
+      asm: string;
+      hex: string;
+      reqSigs: number;
+      type: string;
+      addresses: string[]
+    }
+  }[]
+  hex: string;
+}
+
 export interface HeaderInfo {
   hash: string;
   confirmations: number;
@@ -106,32 +139,6 @@ export interface MempoolContent {
   }
 }
 
-export interface TxDetails {
-  txid: string;
-  hash: string;
-  version: number;
-  size: number;
-  locktime: number;
-  vin:{
-    txid: string;
-    vout: number;
-    scriptSig: {
-      asm: string;
-      hex: string;
-    },
-    sequence: number;
-  }[]
-  vout: {
-    value: number;
-    n: number;
-    scriptPubKey: {
-      asm: string;
-      hex: string;
-      reqSigs: number;
-      type: string;
-      addresses: string[]
-    }
-  }[]
+export interface TxDetails extends TxDetailsBlock {
   blockhash: string;
-  hex: string;
 }

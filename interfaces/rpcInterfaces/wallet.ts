@@ -1,5 +1,5 @@
 /* --- Wallet Commands --- */
-// progress 12/53
+// progress 15/53
 
 import { TokenData } from "../interfaces";
 
@@ -173,4 +173,54 @@ export interface SendToAddress {
     include_unsafe?: boolean
   ];
   response: string;
+}
+
+export interface SignMessage {
+  method: 'signmessage';
+  params: [
+    address: string,
+    message: string
+  ];
+  response: string;
+}
+
+export interface SignRawTransactionWithWallet {
+  method: 'signrawtransactionwithwallet';
+  params: [
+    hexstring: string,
+    prevtxs?: {
+      txid: string;
+      vout: number;
+      scriptPubKey: string;
+      redeemScript?: string;
+      amount: number | string;
+      tokenData?: TokenData
+    }[],
+    sighashtype?: string
+  ];
+  response: {
+    hex: string;
+    complete: boolean;
+    errors?: {
+      txid: string;
+      vout: number;
+      scriptSig: string;
+      sequence: number;
+      error: string;
+    }[];
+  };
+}
+
+export interface WalletProcessPsbt {
+  method: 'walletprocesspsbt';
+  params: [
+    psbt: string,
+    sign?: boolean,
+    sighashtype?: string,
+    bip32derivs?: boolean
+  ];
+  response: {
+    psbt: string;
+    complete: boolean;
+  };
 }

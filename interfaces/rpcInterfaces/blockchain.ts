@@ -1,5 +1,5 @@
 /* --- Blockchain Commands --- */
-// progress 18/33
+// progress 20/33
 
 import { TokenData } from "../interfaces";
 
@@ -369,6 +369,16 @@ export interface GetTxOut {
   }
 }
 
+export interface GetTxOutProof {
+  method: 'gettxoutproof';
+  params: [
+    txids: string[],
+    blockhash?: string
+  ];
+  response: string;
+}
+
+
 export interface GetTxOutSetInfo {
   method: 'gettxoutsetinfo';
   params: [
@@ -384,6 +394,15 @@ export interface GetTxOutSetInfo {
     disk_size: number;
     total_amount: number;
   }
+}
+
+export interface VerifyChain {
+  method: 'verifychain';
+  params: [
+    checklevel?: number,
+    nblocks?: number
+  ];
+  response: boolean;
 }
 
 export interface VerifyTxOutProof {

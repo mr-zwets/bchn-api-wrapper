@@ -1,6 +1,8 @@
 /* --- Wallet Commands --- */
 // progress 5/53
 
+import { TokenData } from "../interfaces";
+
 export interface DumpPrivKey {
   method: 'dumpprivkey';
   params: [
@@ -55,15 +57,6 @@ export interface ListUnspent {
     }
   ];
   response: ListUnspentItem[];
-}
-
-interface TokenData {
-  category : string;
-  amount: string;
-  nft?: {
-    capability: 'none' | 'mutable' | 'minting';
-    commitment: string;
-  }
 }
 
 export interface ListUnspentItem {

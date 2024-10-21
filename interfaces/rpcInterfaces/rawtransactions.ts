@@ -1,5 +1,15 @@
 /* --- Rawtransactions Commands --- */
-// progress 3/14
+// progress 5/14
+
+import { TxDetailsBlock } from "../restInterfaces/interfaces";
+
+export interface DecodeRawTransaction {
+  method: 'decoderawtransaction';
+  params: [
+    hexstring: string
+  ];
+  response: TxDetailsBlock
+}
 
 export interface DecodeScript {
   method: 'decodescript';
@@ -37,4 +47,17 @@ export interface SendRawTransaction {
     allowhighfees?: boolean
   ];
   response: string;
+}
+
+export interface TestMempoolAccept {
+  method: 'testmempoolaccept';
+  params: [
+    rawtxs: string[],
+    allowhighfees?: boolean
+  ];
+  response: {
+    txid: string
+    allowed: boolean
+    'reject-reason': string
+  }[];
 }

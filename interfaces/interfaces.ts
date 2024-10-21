@@ -36,3 +36,12 @@ export type ResponseType<TFormat extends formatOptions, TJson> =
   TFormat extends 'json' ? TJson :
   TFormat extends 'hex' | 'bin' ? string :
   never;
+
+export interface TokenData {
+  category : string;
+  amount: string;
+  nft?: {
+    capability: 'none' | 'mutable' | 'minting';
+    commitment: string;
+  }
+}

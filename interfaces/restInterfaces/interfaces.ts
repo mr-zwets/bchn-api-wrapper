@@ -1,3 +1,5 @@
+import { TokenData } from "../interfaces";
+
 export interface BlockInfoNoTxDetails {
   hash: string;
   confirmations: number;
@@ -52,7 +54,8 @@ export interface TxDetailsBlock {
       hex: string;
       reqSigs: number;
       type: string;
-      addresses: string[]
+      addresses: string[];
+      tokenData: TokenData;
     }
   }[]
   hex: string;

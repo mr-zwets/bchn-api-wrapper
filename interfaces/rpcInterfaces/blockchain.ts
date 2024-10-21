@@ -1,5 +1,5 @@
 /* --- Blockchain Commands --- */
-// progress 11/33
+// progress 13/33
 
 export interface GetBestBlockHash {
   method: 'getbestblockhash';
@@ -84,6 +84,17 @@ export interface GetBlockHash {
   method: 'getblockhash';
   params: [number];
   response: string;
+}
+
+export interface GetChainTips {
+  method: 'getchaintips';
+  params: [];
+  response: {
+    height: number
+    hash: string
+    branchlen:number
+    status: 'active' | 'parked' | 'headers-only' | 'valid-headers' | 'valid-fork' | 'active'
+  }[]
 }
 
 export interface GetChainTxStats {
@@ -244,5 +255,22 @@ export interface GetMempoolInfo {
     maxmempool: number;
     mempoolminfee: number;
     minrelaytxfee: number;
+  }
+}
+
+export interface GetTxOutSetInfo {
+  method: 'gettxoutsetinfo';
+  params: [
+    txid: string
+  ];
+  response: {
+    height: number;
+    bestblock: string;
+    transactions: number;
+    txouts: number;
+    bogosize: number;
+    hash_serialized: string;
+    disk_size: number;
+    total_amount: number;
   }
 }

@@ -1,5 +1,7 @@
 /* --- Blockchain Commands --- */
-// progress 13/33
+// progress 18/33
+
+import { TokenData } from "../interfaces";
 
 export interface GetBestBlockHash {
   method: 'getbestblockhash';
@@ -84,6 +86,87 @@ export interface GetBlockHash {
   method: 'getblockhash';
   params: [number];
   response: string;
+}
+
+export interface GetBlockHeaderBase {
+  method: 'getblockheader';
+  params: [
+    hash_or_height: string| number,
+    verbosity?: boolean | number
+  ];
+}
+
+export interface GetBlockHeaderVerbosity0 extends GetBlockHeaderBase {
+  response: string;
+}
+
+export interface GetBlockHeaderVerbosity1 extends GetBlockHeaderBase {
+  response: {
+    hash: string;
+    confirmations: number;
+    height: number;
+    version: number;
+    versionHex: string;
+    merkleroot: string;
+    time: number;
+    mediantime: number;
+    nonce: number;
+    bits: string;
+    difficulty: number;
+    chainwork: string;
+    nTx: number;
+    previousblockhash: string;
+    nextblockhash: string;
+    ablastate : {
+      epsilon: number;
+      beta: number;
+      blocksize: number;
+      blocksizelimit: number;
+      nextblocksizelimit: number;
+    }
+  };
+}
+
+export interface GetBlockStats {
+  method: 'getblockheader';
+  params: [
+    hash_or_height: string| number,
+    stats?: string[]
+  ];
+  response: {
+    avgfee: number;
+    avgfeerate: number;
+    avgtxsize: number;
+    blockhash: string;
+    feerate_percentiles: {
+      "10th_percentile_feerate": number;
+      "25th_percentile_feerate": number;
+      "50th_percentile_feerate": number;
+      "75th_percentile_feerate": number;
+      "90th_percentile_feerate": number;
+    };
+    height: number;
+    ins: number;
+    maxfee: number;
+    maxfeerate: number;
+    maxtxsize: number;
+    medianfee: number;
+    mediantime: number;
+    mediantxsize: number;
+    minfee: number;
+    minfeerate: number;
+    mintxsize: number;
+    outs: number;
+    subsidy: number;
+    time: number;
+    total_out: number;
+    total_size: number;
+    totalfee: number;
+    txs: number;
+    utxo_increase: number;
+    utxo_size_inc: number;
+  }
+  
 }
 
 export interface GetChainTips {
@@ -244,6 +327,12 @@ export interface GetDsProofScore {
   response: number;
 }
 
+export interface GetFinalizedBlockHash {
+  method: 'getfinalizedblockhash';
+  params: [];
+  response: string;
+}
+
 export interface GetMempoolInfo {
   method: 'getmempoolinfo';
   params: [];
@@ -255,6 +344,28 @@ export interface GetMempoolInfo {
     maxmempool: number;
     mempoolminfee: number;
     minrelaytxfee: number;
+  }
+}
+
+export interface GetTxOut {
+  method: 'gettxout';
+  params: [
+    txid: string,
+    vout: number,
+    include_mempool?: boolean
+  ];
+  response: {
+    bestblock: string;
+    confirmations: number
+    value: number;
+    scriptPubKey: {
+      asm: string;
+      hex: string;
+      type: string;
+      addresses: string[];
+    }
+    tokenData?: TokenData;
+    coinbase: boolean;
   }
 }
 
@@ -273,4 +384,12 @@ export interface GetTxOutSetInfo {
     disk_size: number;
     total_amount: number;
   }
+}
+
+export interface VerifyTxOutProof {
+  method: 'verifytxoutproof';
+  params: [
+    proof: string
+  ];
+  response: string[];
 }

@@ -1,7 +1,7 @@
 // For full list of commands see the documentation on
 // https://docs.bitcoincashnode.org/doc/json-rpc/
 
-// Total progress 25/137 (~18%)
+// Total progress 30/137 (~22%)
 
 export * from './blockchain';
 // export * from './control';

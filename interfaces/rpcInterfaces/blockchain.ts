@@ -1,7 +1,14 @@
 /* --- Blockchain Commands --- */
-// progress 20/33
+// progress 25/33
 
 import { TokenData } from "../interfaces";
+
+export interface FinalizeBlock {
+  method: 'finalizeblock';
+  params: [
+    blockhash: string
+  ];
+}
 
 export interface GetBestBlockHash {
   method: 'getbestblockhash';
@@ -333,6 +340,81 @@ export interface GetFinalizedBlockHash {
   response: string;
 }
 
+interface GetMempoolAncestorsBase {
+  method: 'getmempoolancestors';
+  params: [
+    txid: string,
+    verbose?: boolean | number
+  ];
+}
+
+// Verbosity 0 (false)
+export interface GetMempoolAncestorsVerbosity0 extends GetMempoolAncestorsBase {
+  response: string[];
+}
+
+// Verbosity 1 (true)
+export interface GetMempoolAncestorsVerbosity1 extends GetMempoolAncestorsBase {
+  response: {
+    [transactionid: string]: {
+      size: number;
+      time: number;
+      fees: {
+        base: number;
+        modified: number;
+      };
+      depends: string[];
+      spentby: string[];
+    };
+  };
+}
+
+interface GetMempoolDescendantsBase {
+  method: 'getmempooldescendants';
+  params: [
+    txid: string,
+    verbose?: boolean | number
+  ];
+}
+
+// Verbosity 0 (false)
+export interface GetMempoolDescendantsVerbosity0 extends GetMempoolDescendantsBase {
+  response: string[];
+}
+
+// Verbosity 1 (true)
+export interface GetMempoolDescendantsVerbosity1 extends GetMempoolDescendantsBase {
+  response: {
+    [transactionid: string]: {
+      size: number;
+      time: number;
+      fees: {
+        base: number;
+        modified: number;
+      };
+      depends: string[];
+      spentby: string[];
+    };
+  };
+}
+
+export interface GetMempoolEntry {
+  method: 'getmempoolentry';
+  params: [
+    txid: string
+  ];
+  response: {
+    size: number;
+    time: number;
+    fees: {
+      base: number;
+      modified: number;
+    };
+    depends: string[];
+    spentby: string[];
+  };
+}
+
 export interface GetMempoolInfo {
   method: 'getmempoolinfo';
   params: [];
@@ -345,6 +427,34 @@ export interface GetMempoolInfo {
     mempoolminfee: number;
     minrelaytxfee: number;
   }
+}
+
+interface GetRawMempoolBase {
+  method: 'getrawmempool';
+  params: [
+    verbose?: boolean | number
+  ];
+}
+
+// Verbosity 0 (false)
+export interface GetRawMempoolVerbosity0 extends GetRawMempoolBase {
+  response: string[];
+}
+
+// Verbosity 1 (true)
+export interface GetRawMempoolVerbosity1 extends GetRawMempoolBase {
+  response: {
+    [transactionid: string]: {
+      size: number;
+      time: number;
+      fees: {
+        base: number;
+        modified: number;
+      };
+      depends: string[];
+      spentby: string[];
+    };
+  };
 }
 
 export interface GetTxOut {

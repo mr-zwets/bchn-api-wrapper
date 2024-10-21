@@ -11,7 +11,7 @@ interface GetBlockBase {
   method: 'getblock';
   params: [
     blockhash: string,
-    verbosity?: number
+    verbosity?: number | boolean
   ];
 }
 
@@ -182,7 +182,7 @@ export interface GetDsProofVerbosity3 extends GetDsProofVerbosity2 {
 export interface GetDsProofListBase {
   method: 'getdsprooflist';
   params: [
-    verbosity?: number,
+    verbosity?: number | boolean,
     include_orphans?: boolean
   ];
 }

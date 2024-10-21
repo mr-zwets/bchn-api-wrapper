@@ -1,5 +1,5 @@
 /* --- Wallet Commands --- */
-// progress 5/53
+// progress 7/53
 
 import { TokenData } from "../interfaces";
 
@@ -27,6 +27,27 @@ export interface GetBalance {
     include_watchonly?: boolean
   ];
   response: number;
+}
+
+export interface GetWalletInfo {
+  method: 'getwalletinfo';
+  params: [];
+  response: {
+    walletname: string,
+    walletversion: number;
+    balance: number;
+    unconfirmed_balance: number;
+    immature_balance: number;
+    txcount: number;
+    keypoololdest: number;
+    keypoolsize: number;
+    keypoolsize_hd_internal: number;
+    unlocked_until: number;
+    paytxfee: number;
+    hdseedid?: string;
+    hdmasterkeyid?: string;
+    private_keys_enabled: boolean;
+  }
 }
 
 export interface ImportAddress {
@@ -72,4 +93,10 @@ export interface ListUnspentItem {
   spendable: boolean;
   solvable: boolean;
   safe: boolean;
+}
+
+export interface ListWallets {
+  method: 'importaddress';
+  params: [];
+  response: string[];
 }

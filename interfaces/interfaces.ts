@@ -37,6 +37,40 @@ export type ResponseType<TFormat extends formatOptions, TJson> =
   TFormat extends 'hex' | 'bin' ? string :
   never;
 
+// General interfaces used in both REST & RPC endpoints
+export interface Transaction {
+  txid: string;
+  hash: string;
+  size: number;
+  version: number;
+  locktime: number;
+  vin: TransactionInput[];
+  vout: TransactionOutput[];
+}
+
+export interface TransactionInput {
+  txid: string;
+  vout: number;
+  scriptSig: {
+    asm: string;
+    hex: string;
+  };
+  sequence: number;
+}
+
+export interface TransactionOutput {
+  value: number;
+  n: number;
+  scriptPubKey: {
+    asm: string;
+    hex: string;
+    reqSigs: number;
+    type: string;
+    addresses: string[];
+    tokenData: TokenData;
+  }
+}
+
 export interface TokenData {
   category : string;
   amount: string;

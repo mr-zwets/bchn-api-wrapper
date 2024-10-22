@@ -1,7 +1,65 @@
 /* --- Wallet Commands --- */
-// progress 15/53
+// progress 26/53
 
 import { TokenData } from "../interfaces";
+
+export interface AbandonTransaction {
+  method: 'abandontransaction';
+  params: [
+    txid: string
+  ];
+  response: null;
+}
+
+export interface AbortRescan {
+  method: 'abortrescan';
+  params: [];
+  response: null;
+}
+
+export interface AddMultisigAddress {
+  method: 'addmultisigaddress';
+  params: [
+    nrequired: number,
+    keys: string[],
+    label?: string
+  ];
+  response: {
+    address: string;
+    redeemScript: string;
+  };
+}
+
+export interface BackupWallet {
+  method: 'backupwallet';
+  params: [
+    destination: string
+  ];
+  response: null;
+}
+
+export interface CreateWallet {
+  method: 'createwallet';
+  params: [
+    wallet_name: string,
+    disable_private_keys?: boolean,
+    blank?: boolean
+  ];
+  response: {
+    name: string;
+    warning?: string;
+  };
+}
+
+export interface DumpWallet {
+  method: 'dumpwallet';
+  params: [
+    filename: string
+  ];
+  response: {
+    filename: string;
+  };
+}
 
 export interface DumpPrivKey {
   method: 'dumpprivkey';
@@ -9,6 +67,26 @@ export interface DumpPrivKey {
     address: string,
   ];
   response: string;
+}
+
+export interface EncryptWallet {
+  method: 'encryptwallet';
+  params: [
+    passphrase: string
+  ];
+  response: string;
+}
+
+export interface GetAddressesByLabel {
+  method: 'getaddressesbylabel';
+  params: [
+    label: string
+  ];
+  response: {
+    [address: string]: {
+      purpose: string;
+    };
+  };
 }
 
 export interface GetAddressInfo {
@@ -58,6 +136,12 @@ export interface GetNewAddress {
   response: string;
 }
 
+export interface GetRawChangeAddress {
+  method: 'getrawchangeaddress';
+  params: [];
+  response: string;
+}
+
 export interface GetReceivedByAddress {
   method: 'getreceivedbyaddress';
   params: [
@@ -65,6 +149,45 @@ export interface GetReceivedByAddress {
     minconf?: number
   ];
   response: number;
+}
+
+export interface GetReceivedByLabel {
+  method: 'getreceivedbylabel';
+  params: [
+    label: string,
+    minconf?: number
+  ];
+  response: number;
+}
+
+export interface GetTransaction {
+  method: 'gettransaction';
+  params: [
+    txid: string,
+    include_watchonly?: boolean
+  ];
+  response: {
+    amount: number;
+    fee?: number;
+    confirmations: number;
+    blockhash?: string;
+    blockindex?: number;
+    blocktime?: number;
+    txid: string;
+    time: number;
+    timereceived: number;
+    'bip125-replaceable': 'yes' | 'no' | 'unknown';
+    details: {
+      address: string;
+      category: 'send' | 'receive';
+      amount: number;
+      label?: string;
+      vout: number;
+      fee?: number;
+      abandoned?: boolean;
+    }[];
+    hex: string;
+  };
 }
 
 export interface GetUnconfirmedBalance {

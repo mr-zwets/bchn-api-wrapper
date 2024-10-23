@@ -38,6 +38,8 @@ To use the RPC and REST APIs on your BCHN node, you need to enable them in your 
   To learn more about the `.conf` settings, see the [official documentation](https://docs.bitcoincashnode.org/doc/bitcoin-conf/).
 </details>
 
+Note that the REST-endpoints can be made public, but the RPC-endpoints should never be made public. If you want to use the RPC-endpoints of your own node remotely, you need a secure connection using SSL/TLS to encrypt your communication and protect your credentials and data from being exposed. Additionally, ensure you have strong, unique RPC credentials (username and password) set in your node's configuration file.
+
 ## Install
 
 For now, you can clone the library locally.

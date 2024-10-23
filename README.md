@@ -16,6 +16,8 @@ The `BchnRestClient` uses a class with unique methods for each of the endpoints.
 
 The `BchnRpcClient` uses a request function which uses generics to type arguments and responses.
 
+The **REST API** is ideal for **read-only** access to general blockchain information such as transactions, blocks, and UTXO data. In contrast, the **RPC API** allows for **full interaction** with the Bitcoin Cash node, including managing the built-in wallet, sending transactions, performing mining operations, and issuing control commands like pruning or stopping the node. While the REST API provides 10 endpoints, the RPC API offers a much broader set of 136 commands.
+
 ## Configuration
 
 To use the RPC and REST APIs on your BCHN node, you need to enable them in your node's configuration file.
@@ -43,7 +45,7 @@ This library will be published to NPM in the future when it is more mature.
 
 ## REST usage
 
-The `BchnRestClient` is a wrapper over the 10 BCHN REST-endpoints. For the list of the 10 BCHN REST-endpoints see the [REST documentation](https://docs.bitcoincashnode.org/doc/REST-interface/).
+The `BchnRestClient` is a wrapper over the BCHN REST-endpoints. For the list of the 10 BCHN REST-endpoints see the [REST documentation](https://docs.bitcoincashnode.org/doc/REST-interface/).
 
 ### REST example
 
@@ -53,24 +55,30 @@ import { BchnRestClient } from 'bchn-api-wrapper'
 // Instantiate the REST client to query your BCHN node
 const restClient = new BchnRestClient("http://localhost:8332")
 
-// Fetch mempool information and log the size
-const mempoolInfo = await restClient.getMempoolInfo()
-console.log(`mempool size is currently ${mempoolInfo.bytes} bytes`)
+// Get the latest blockhash
+const chainInfo = await restClient.getChainInfo()
+const latestBlockHash = chainInfo.bestblockhash
+console.log(`The latest blockhash is ${latestBlockHash}`)
+
+// Get block info with includeTxDetails flag
+const fullBlockInfo = await restClient.getBlock(latestBlockHash, true)
+console.log(JSON.stringify(fullBlockInfo))
 ```
 
 ## RPC usage
 
-The `BchnRpcClient` is a thin type-wrapper over the actual RPC endpoints, because of this you can always use all RPC functionality through the library. For a complete list of all BCHN RPC-endpoints see the [RPC documentation](https://docs.bitcoincashnode.org/doc/json-rpc/).
+The `BchnRpcClient` is a thin type-wrapper over the actual RPC endpoints, with request interfaces for each endpoint. For a complete list of all BCHN RPC-endpoints see the [RPC documentation](https://docs.bitcoincashnode.org/doc/json-rpc/).
 
-The library currently exports types for `110/137` RPC methods.
+The `RpcClientConfig` object accepts optional parameters for `logger`, `timeoutMs`, `retryDelayMs` & `maxRetries`
+
+The library does not currently support making batched RPC requests.
 
 ### RPC example
 
 ```ts
 import { BchnRpcClient, RpcClientConfig, GetBestBlockHash, GetBlockVerbosity1 } from 'bchn-api-wrapper'
 
-// Create the RpcClientConfig to configure the node-url and add authentication details
-// See the interface for more configuarables (logger, timeoutMs, retryDelayMs, maxRetries)
+// Create the RpcClientConfig
 const clientOptions: RpcClientConfig = {
   url: "http://localhost:8332",
   rpcUser: "rpcUser",

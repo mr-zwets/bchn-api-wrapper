@@ -1,4 +1,4 @@
-import type { formatOptions, ResponseType } from "./interfaces/interfaces.js";
+import type { RestClientConfig, formatOptions, ResponseType } from "./interfaces/interfaces.js";
 import type {
   BlockInfoNoTxDetails,
   BlockInfoTxDetails,
@@ -12,24 +12,60 @@ import type {
 
 export class BchnRestClient {
   private baseUrl: string;
+  private timeoutMs: number;
+  private logger: Console;
 
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+  constructor(config: RestClientConfig) {
+    this.baseUrl = config.url;
+    this.timeoutMs = config.timeoutMs ?? 5000;
+    this.logger = config.logger ?? console;
   }
 
   private async fetchFromNode<T, TFormat extends formatOptions>(
     endpoint: string,
     format: TFormat
   ): Promise<ResponseType<TFormat, T>> {
-    const response = await fetch(`${this.baseUrl}/rest/${endpoint}`);
-    if (!response.ok) {
-      throw new Error(`Error fetching data from ${endpoint}: ${response.statusText}`);
-    }
-    
-    if (format === 'json') {
-      return await response.json() as ResponseType<TFormat, T>;
-    } else {
-      return await response.text() as ResponseType<TFormat, T>;  // For 'bin' and 'hex', return raw text
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+    try {
+      const response = await fetch(`${this.baseUrl}/rest/${endpoint}`, {
+        signal: controller.signal,  // Attach the AbortController signal for timeout
+      });
+      
+      clearTimeout(timeout);  // Clear the timeout if the request completes
+
+      if (!response.ok) {
+        throw new Error(`Error fetching data from ${endpoint}: ${response.statusText}`);
+      }
+      
+      if (format === 'json') {
+        return await response.json() as ResponseType<TFormat, T>;
+      } else {
+        return await response.text() as ResponseType<TFormat, T>;  // For 'bin' and 'hex', return raw text
+      }
+    } catch(error) {
+      clearTimeout(timeout);  // Clear timeout on error
+      let errorMessage: string | undefined
+      
+      // Check if the error is due to timeout or other fetch-related issues
+      if (typeof error === 'string') {
+        errorMessage = error;
+        this.logger.error(error);
+      } else if (error instanceof Error) {
+        // If error is an instance of Error, you can safely access its properties
+        errorMessage = error.message;
+        if (error.name === 'AbortError') {
+          this.logger.error(`Request to ${endpoint} timed out after ${this.timeoutMs} ms`);
+        } else {
+          this.logger.error(`Request to ${endpoint} failed with error: ${error.message}`);
+        }
+      } else {
+        this.logger.error(`Unknown error occurred during request to ${endpoint}`);
+        throw new Error(`Unknown error: ${error}`);
+      }
+      
+      // Always rethrow the error after logging
+      throw new Error(errorMessage);
     }
   }
 

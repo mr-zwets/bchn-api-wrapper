@@ -28,6 +28,12 @@ export interface RpcRequest {
   response: RequestResponse;
 }
 
+export interface RestClientConfig {
+  url: string;
+  logger?: typeof console ;
+  timeoutMs?: number;
+}
+
 
 export type formatOptions = 'bin' | 'hex' | 'json'
 

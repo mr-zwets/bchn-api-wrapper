@@ -49,13 +49,19 @@ This library will be published to NPM in the future when it is more mature.
 
 The `BchnRestClient` is a wrapper over the BCHN REST-endpoints. For the list of the 10 BCHN REST-endpoints see the [REST documentation](https://docs.bitcoincashnode.org/doc/REST-interface/).
 
+The `RestClientConfig` object accepts optional parameters for `logger` & `timeoutMs`
+
 ### REST example
 
 ```ts
-import { BchnRestClient } from 'bchn-api-wrapper'
+import { BchnRestClient, RestClientConfig } from 'bchn-api-wrapper'
 
+// Create the RestClientConfig
+const clientOptions: RestClientConfig = {
+  url: "http://localhost:8332",
+}
 // Instantiate the REST client to query your BCHN node
-const restClient = new BchnRestClient("http://localhost:8332")
+const restClient = new BchnRestClient(clientOptions)
 
 // Get the latest blockhash
 const chainInfo = await restClient.getChainInfo()

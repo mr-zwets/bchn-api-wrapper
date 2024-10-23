@@ -1,6 +1,6 @@
-import { RpcClientConfig, RpcRequest } from "./interfaces/interfaces.ts";
-import { getRandomId, validateAndConstructUrl } from "./utils/utils.ts";
-import { RetryLimitExceededError } from "./utils/errors.ts";
+import type { RpcClientConfig, RpcRequest } from "./interfaces/interfaces.js";
+import { getRandomId, validateAndConstructUrl } from "./utils/utils.js";
+import { RetryLimitExceededError } from "./utils/errors.js";
 
 export class BchnRpcClient {
   private url: string
@@ -62,12 +62,21 @@ export class BchnRpcClient {
   
       } catch (error) {
         clearTimeout(timeout);  // Clear timeout on error
-  
+        let errorMessage: string | undefined
+        
         // Check if the error is due to timeout or other fetch-related issues
-        if (error.name === 'AbortError') {
-          this.logger.error(`Request timed out after ${this.timeoutMs} ms`);
-        } else {
-          this.logger.error(`Request failed with error: ${error.message}`);
+        if(typeof error == 'string'){
+          errorMessage = error
+          this.logger.error(error)
+        }
+        else if (error instanceof Error) {
+          // If error is an instance of Error, you can safely access its properties
+          errorMessage = error.message
+          if (error.name === 'AbortError') {
+            this.logger.error(`Request timed out after ${this.timeoutMs} ms`);
+          } else {
+            this.logger.error(`Request failed with error: ${error.message}`);
+          }
         }
   
         // Retry if allowed
@@ -76,7 +85,7 @@ export class BchnRpcClient {
           await new Promise(res => setTimeout(res, this.retryDelayMs));  // Wait before retrying
         } else {
           // If no retries are left, throw the final error
-          throw new RetryLimitExceededError(`Request failed after ${this.maxRetries + 1} attempts: ${error.message}`);
+          throw new RetryLimitExceededError(`Request failed after ${this.maxRetries + 1} attempts: ${errorMessage}`);
         }
       }
     }

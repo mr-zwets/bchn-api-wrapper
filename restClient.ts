@@ -1,5 +1,14 @@
-import { formatOptions, ResponseType } from "./interfaces/interfaces";
-import { BlockInfoNoTxDetails, BlockInfoTxDetails, ChainInfo, HeaderInfo, MempoolContent, MempoolInfo, TxDetails, UtxosInfo } from "./interfaces/restInterfaces/interfaces";
+import type { formatOptions, ResponseType } from "./interfaces/interfaces.js";
+import type {
+  BlockInfoNoTxDetails,
+  BlockInfoTxDetails,
+  ChainInfo,
+  HeaderInfo,
+  MempoolContent,
+  MempoolInfo,
+  TxDetails,
+  UtxosInfo
+} from "./interfaces/restInterfaces/interfaces.js";
 
 export class BchnRestClient {
   private baseUrl: string;

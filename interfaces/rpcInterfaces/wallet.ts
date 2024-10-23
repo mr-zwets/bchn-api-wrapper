@@ -1,7 +1,7 @@
 /* --- Wallet Commands --- */
 // progress 52/52
 
-import { TokenData } from "../interfaces";
+import type { TokenData } from "../interfaces.js";
 
 export interface AbandonTransaction {
   method: 'abandontransaction';

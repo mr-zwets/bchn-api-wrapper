@@ -1,8 +1,8 @@
-import {
+import type {
   RpcClientConfig,
   RpcClientUrlConfig,
   RpcClientHostConfig,
-} from "../interfaces/interfaces";
+} from "../interfaces/interfaces.js";
 
 export function getRandomId(): number {
   return Math.floor(Math.random() * 100000);

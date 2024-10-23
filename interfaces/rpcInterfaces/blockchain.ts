@@ -1,7 +1,7 @@
 /* --- Blockchain Commands --- */
 // progress 33/33
 
-import { TokenData } from "../interfaces";
+import type { TokenData } from "../interfaces.js";
 
 export interface FinalizeBlock {
   method: 'finalizeblock';

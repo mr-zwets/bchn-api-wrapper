@@ -1,7 +1,7 @@
 /* --- Rawtransactions Commands --- */
 // progress 14/14
 
-import { TokenData, Transaction, TransactionInput, TransactionOutput } from "../interfaces";
+import  type { TokenData, Transaction, TransactionInput, TransactionOutput } from "../interfaces.js";
 
 export interface CombinePsbt {
   method: 'decoderawtransaction';

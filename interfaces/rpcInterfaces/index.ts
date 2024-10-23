@@ -3,12 +3,12 @@
 
 // Total progress 136/136 (100%)
 
-export * from './blockchain';
-export * from './control';
-export * from './generating';
-export * from './mining';
-export * from './network';
-export * from './rawtransactions';
-export * from './util';
-export * from './wallet';
-export * from './zmq'
+export * from './blockchain.js';
+export * from './control.js';
+export * from './generating.js';
+export * from './mining.js';
+export * from './network.js';
+export * from './rawtransactions.js';
+export * from './util.js';
+export * from './wallet.js';
+export * from './zmq.js'

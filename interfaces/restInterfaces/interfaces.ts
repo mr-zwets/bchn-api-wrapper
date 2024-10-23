@@ -1,4 +1,4 @@
-import { TokenData, Transaction } from "../interfaces";
+import type { Transaction } from "../interfaces.js";
 
 export interface BlockInfoNoTxDetails {
   hash: string;

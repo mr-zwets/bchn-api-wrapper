@@ -14,3 +14,19 @@ describe('BchnRestClient URL validation tests', () => {
     expect(() => new BchnRestClient({url: ''})).toThrow('URL is required');
   });
 });
+
+describe('BchnRestClient Timeout Handling', () => {
+  const config = {
+    url: 'http://localhost:8332',
+    timeoutMs: 1000, // 1 second timeout
+  };
+  const restClient = new BchnRestClient(config);
+
+  it('should throw a timeout error if the request exceeds the timeout limit', async () => {
+    await expect(restClient.getChainInfo()).rejects.toThrow('Request timed out');
+  });
+
+  it('should not return a timeout error if the request completes in time', async () => {
+    await expect(restClient.getMempoolInfo()).resolves.toEqual({});
+  });
+});

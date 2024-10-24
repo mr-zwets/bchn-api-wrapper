@@ -26,15 +26,11 @@ export class BchnRestClient {
     endpoint: string,
     format: TFormat
   ): Promise<ResponseType<TFormat, T>> {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
       const response = await fetch(`${this.baseUrl}/rest/${endpoint}`, {
-        signal: controller.signal,  // Attach the AbortController signal for timeout
+        signal: AbortSignal.timeout(this.timeoutMs),
       });
       
-      clearTimeout(timeout);  // Clear the timeout if the request completes
-
       if (!response.ok) {
         throw new Error(`Error fetching data from ${endpoint}: ${response.statusText}`);
       }
@@ -45,21 +41,16 @@ export class BchnRestClient {
         return await response.text() as ResponseType<TFormat, T>;  // For 'bin' and 'hex', return raw text
       }
     } catch(error) {
-      clearTimeout(timeout);  // Clear timeout on error
       let errorMessage: string | undefined
       
       // Check if the error is due to timeout or other fetch-related issues
       if (typeof error === 'string') {
         errorMessage = error;
         this.logger.error(error);
-      } else if (error instanceof Error) {
-        // If error is an instance of Error, you can safely access its properties
-        errorMessage = error.message;
-        if (error.name === 'AbortError') {
-          this.logger.error(`Request to ${endpoint} timed out after ${this.timeoutMs} ms`);
-        } else {
-          this.logger.error(`Request to ${endpoint} failed with error: ${error.message}`);
-        }
+      } else if (error instanceof DOMException && error.name === 'TimeoutError') {
+        // If error is an instance DOMException TimeoutError
+        errorMessage = 'Request timed out';
+        this.logger.error(`Request to ${endpoint} timed out after ${this.timeoutMs} ms`);
       } else {
         this.logger.error(`Unknown error occurred during request to ${endpoint}`);
         throw new Error(`Unknown error: ${error}`);

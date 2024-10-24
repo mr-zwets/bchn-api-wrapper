@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "description": "a Typescript wrapper for interacting with the Bitcoin Cash Node (BCHN) API ",
   "type": "module",
+  "main": "dist/src/index.js",
   "author": "",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "tsc && cross-env NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.7.7",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
     "tsc": "^2.0.4",
     "typescript": "^5.6.3"
   }

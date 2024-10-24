@@ -9,6 +9,7 @@ import type {
   TxDetails,
   UtxosInfo
 } from "./interfaces/restInterfaces/interfaces.js";
+import { validateUrl } from "./utils/utils.js";
 
 export class BchnRestClient {
   private baseUrl: string;
@@ -16,7 +17,7 @@ export class BchnRestClient {
   private logger: Console;
 
   constructor(config: RestClientConfig) {
-    this.baseUrl = config.url;
+    this.baseUrl = validateUrl(config.url);
     this.timeoutMs = config.timeoutMs ?? 5000;
     this.logger = config.logger ?? console;
   }

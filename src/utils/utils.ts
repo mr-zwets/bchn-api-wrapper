@@ -8,7 +8,7 @@ export function getRandomId(): number {
   return Math.floor(Math.random() * 100000);
 }
 
-// A utility function to validate and construct the URL from the config object
+// A utility function to validate and construct the URL from the RpcClientConfig object
 export function validateAndConstructUrl(config: RpcClientConfig): string {
   let url: string
   if (isUrlConfig(config)) {
@@ -20,13 +20,14 @@ export function validateAndConstructUrl(config: RpcClientConfig): string {
     }
     url = validateUrl(`${protocol}://${host}:${port}`)
   } else {
-    throw new Error('Invalid configuration: Missing required fields for URL or protocol/host/port setup');
+    throw new Error('Invalid configuration: Either provide the url or protocol/host/port');
   }
   return url
 }
 
 // A utility function to validate a URL
 export function validateUrl(url: string) {
+  if(!url) throw new Error('URL is required');
   try {
     new URL(url);
   } catch (err) {

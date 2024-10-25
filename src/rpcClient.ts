@@ -34,9 +34,6 @@ export class BchnRpcClient {
     
     // Retry logic
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
-  
       try {
         // Send the request with a timeout and retries
         const response = await fetch(this.url, {
@@ -46,10 +43,8 @@ export class BchnRpcClient {
             'Authorization': `Basic ${auth}`
           },
           body: JSON.stringify({ jsonrpc: '2.0', method: endpoint, params, id: getRandomId() }),
-          signal: controller.signal,  // Attach the AbortController signal for timeout
+          signal: AbortSignal.timeout(this.timeoutMs),
         });
-  
-        clearTimeout(timeout);  // Clear the timeout if the request completes
   
         const result = await response.json();
   
@@ -61,7 +56,6 @@ export class BchnRpcClient {
         return result.result as T['response'];  // Return the result if successful
   
       } catch (error) {
-        clearTimeout(timeout);  // Clear timeout on error
         let errorMessage: string | undefined
         
         // Check if the error is due to timeout or other fetch-related issues
@@ -69,14 +63,16 @@ export class BchnRpcClient {
           errorMessage = error
           this.logger.error(error)
         }
+        else if (error instanceof DOMException && error.name === 'TimeoutError') {
+          // If error is an instance DOMException TimeoutError
+          errorMessage = error.message
+          this.logger.error(`Request timed out after ${this.timeoutMs} ms`);
+        }
         else if (error instanceof Error) {
           // If error is an instance of Error, you can safely access its properties
           errorMessage = error.message
-          if (error.name === 'AbortError') {
-            this.logger.error(`Request timed out after ${this.timeoutMs} ms`);
-          } else {
-            this.logger.error(`Request failed with error: ${error.message}`);
-          }
+          this.logger.error(`Request failed with error: ${error.message}`);
+          
         }
   
         // Retry if allowed

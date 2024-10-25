@@ -14,6 +14,22 @@ const server = setupServer(
     await delay(500)
     return HttpResponse.json({})
   }),
+
+  http.post('http://localhost:8332', async ({ request }) => {
+    const json = await request.json();
+
+    // Introduce a delay longer than the timeout setting to simulate a timeout scenario
+    if (json.method === 'getbestblockhash') {
+      await delay(3000)
+      return HttpResponse.json({"jsonrpc": "2.0", "result": {}, "id": 4})
+    }
+
+    if (json.method === 'getblockcount') {
+      // Mock normally working RPC command
+      await delay(500)
+      return HttpResponse.json({"jsonrpc": "2.0", "result": {}, "id": 5})
+    }
+  })
 );
 
 // Start the server before tests and reset handlers after each test

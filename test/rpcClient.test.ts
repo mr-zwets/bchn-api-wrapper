@@ -54,20 +54,40 @@ describe('BchnRpcClient should have the correct constructor arguments', () => {
   });
 });
 
-describe('BchnRpcClient Timeout Handling', () => {
-  const config = {
-    url: 'http://localhost:8332',
-    rpcUser: 'rpcUser',
-    rpcPassword: 'rpcPassword',
-    timeoutMs: 1000,
-  }
-  const rpcClient = new BchnRpcClient(config);
-
+describe('BchnRpcClient Timeout and Retry Handling', () => {
   it('should throw a timeout error if the request exceeds the timeout limit', async () => {
+    const config = {
+      url: 'http://localhost:8332',
+      rpcUser: 'rpcUser',
+      rpcPassword: 'rpcPassword',
+      timeoutMs: 1000,
+    }
+    const rpcClient = new BchnRpcClient(config);
+
     await expect(rpcClient.request("getbestblockhash")).rejects.toThrow('Request failed after 1 attempts: The operation was aborted due to timeout');
   });
 
   it('should not return a timeout error if the request completes in time', async () => {
+    const config = {
+      url: 'http://localhost:8332',
+      rpcUser: 'rpcUser',
+      rpcPassword: 'rpcPassword',
+      timeoutMs: 1000,
+    }
+    const rpcClient = new BchnRpcClient(config);
+
     await expect(rpcClient.request("getblockcount")).resolves.toEqual({});
+  });
+
+  it('should return an RetryLimitExceededError if all retries fail', async () => {
+    const config = {
+      url: 'http://localhost:8332',
+      rpcUser: 'rpcUser',
+      rpcPassword: 'rpcPassword',
+      maxRetries: 3,
+      timeoutMs: 1000,
+    }
+    const rpcClient = new BchnRpcClient(config);
+    await expect(rpcClient.request("getbestblockhash")).rejects.toThrow("Request failed after 4 attempts: The operation was aborted due to timeout");
   });
 });

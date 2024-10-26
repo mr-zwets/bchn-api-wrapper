@@ -45,3 +45,11 @@ function isUrlConfig(config: RpcClientConfig): config is RpcClientUrlConfig {
 function isHostConfig(config: RpcClientConfig): config is RpcClientHostConfig {
   return 'protocol' in config && 'hostname' in config && 'port' in config;
 }
+
+export enum BchnNetworkPort {
+  Mainnet = 8332,
+  Testnet = 18332,
+  Testnet4 = 28332,
+  Scalenet = 38332,
+  Regtest = 18443
+}

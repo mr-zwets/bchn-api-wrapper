@@ -91,7 +91,9 @@ export interface GetBlockCount {
 
 export interface GetBlockHash {
   method: 'getblockhash';
-  params: [number];
+  params: [
+    height: number
+  ];
   response: string;
 }
 

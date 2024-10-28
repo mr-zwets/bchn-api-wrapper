@@ -1,4 +1,4 @@
-import { BchnRpcClient, type RpcClientConfig } from '../src/index.js';
+import { BchnRpcClient, type GetBestBlockHash, type GetBlockCount, type GetBlockHash, type RpcClientConfig } from '../src/index.js';
 
 describe('BchnRpcClient should have the correct constructor arguments', () => {
   it('should create an instance with a valid URL', () => {
@@ -76,7 +76,7 @@ describe('BchnRpcClient Timeout and Retry Handling', () => {
     }
     const rpcClient = new BchnRpcClient(config);
 
-    await expect(rpcClient.request("getblockcount")).resolves.toEqual({});
+    await expect(rpcClient.request<GetBlockCount>("getblockcount")).resolves.toEqual({});
   });
 
   it('should return an RetryLimitExceededError if all retries fail', async () => {
@@ -88,6 +88,28 @@ describe('BchnRpcClient Timeout and Retry Handling', () => {
       timeoutMs: 1000,
     }
     const rpcClient = new BchnRpcClient(config);
-    await expect(rpcClient.request("getbestblockhash")).rejects.toThrow("Request failed after 4 attempts: The operation was aborted due to timeout");
+    await expect(rpcClient.request<GetBestBlockHash>("getbestblockhash")).rejects.toThrow("Request failed after 4 attempts: The operation was aborted due to timeout");
   });
 });
+
+describe('BchnRpcClient Handling of Parameters', () => {
+  it('should error with incorrect number of params', async () => {
+    const config = {
+      url: 'http://localhost:8332',
+      rpcUser: 'rpcUser',
+      rpcPassword: 'rpcPassword',
+    }
+    const rpcClient = new BchnRpcClient(config);
+    await expect(rpcClient.request("getblockhash")).rejects.toThrow("Request failed after 1 attempts: Error: Invalid Request");
+  })
+
+  it('should not error with correct number of params', async () => {
+    const config = {
+      url: 'http://localhost:8332',
+      rpcUser: 'rpcUser',
+      rpcPassword: 'rpcPassword',
+    }
+    const rpcClient = new BchnRpcClient(config);
+    await expect(rpcClient.request<GetBlockHash>("getblockhash", 5)).resolves.toEqual({});
+  })
+})

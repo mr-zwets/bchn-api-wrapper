@@ -29,6 +29,16 @@ const server = setupServer(
       await delay(500)
       return HttpResponse.json({"jsonrpc": "2.0", "result": {}, "id": 5})
     }
+
+    if (json.method === 'getblockhash') {
+      // Mock normally working RPC command
+      await delay(500)
+      if (json.params[0]) {
+        return HttpResponse.json({"jsonrpc": "2.0", "result": {}, "id": 6})
+      } else {
+        return HttpResponse.json({"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": 7})
+      }
+    }
   })
 );
 

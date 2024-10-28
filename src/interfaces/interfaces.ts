@@ -19,7 +19,7 @@ export interface RpcClientHostConfig extends BaseRpcClientConfig {
 
 export type RpcClientConfig = RpcClientUrlConfig | RpcClientHostConfig
 
-export type RPCParameter = string | number | boolean | undefined;
+export type RPCParameter = string | number | boolean | undefined | object;
 declare type RequestResponse = object | string | number | boolean | null | RequestResponse[];
 
 export interface RpcRequest {

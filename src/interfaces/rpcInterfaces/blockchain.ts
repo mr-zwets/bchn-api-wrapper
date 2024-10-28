@@ -1,7 +1,7 @@
 /* --- Blockchain Commands --- */
 // progress 33/33
 
-import type { TokenData } from "../interfaces.js";
+import type { TokenData, Transaction, TransactionInput } from "../interfaces.js";
 
 export interface FinalizeBlock {
   method: 'finalizeblock';
@@ -67,7 +67,96 @@ export interface GetBlockVerbosity1 extends GetBlockBase {
   }
 }
 
-// TODO: type Verbosity2, Verbosity3
+// Verbosity = 2
+export interface GetBlockVerbosity2 extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 2
+  ];
+  response: {
+    hash: string;
+    confirmations: number;
+    size: number;
+    height: number;
+    version: number;
+    versionHex: string;
+    merkleroot: string;
+    tx: {
+      txid: string;
+      fee?: number;
+    }[];
+    time: number;
+    mediantime: number;
+    nonce: number;
+    bits: string;
+    difficulty: number;
+    chainwork: string;
+    nTx: number;
+    previousblockhash: string;
+    nextblockhash: string;
+    ablastate?: {
+      epsilon: number;
+      beta: number;
+      blocksize: number;
+      blocksizelimit: number;
+      nextblocksizelimit: number;
+    };
+  };
+}
+
+export interface TransactionInputWithPrevout extends TransactionInput {
+  prevout?: {
+    generated: boolean;
+    height: number;
+    value: number;
+    scriptPubKey: {
+      asm: string;
+      hex: string;
+      type: 'nonstandard' | 'pubkey' | 'pubkeyhash' | 'scripthash' | 'multisig' | 'nulldata';
+      address?: string;
+    };
+    tokenData?: TokenData;
+  };
+}
+
+// GetBlockVerbosity3 uses enhanced TransactionInputWithPrevout
+export interface TransactionWithPrevout extends Omit<Transaction, 'vin'> {
+  vin: TransactionInputWithPrevout[]; // Use the extended input type with `prevout`
+}
+
+// Verbosity = 3
+export interface GetBlockVerbosity3 extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 3
+  ];
+  response: {
+    hash: string;
+    confirmations: number;
+    size: number;
+    height: number;
+    version: number;
+    versionHex: string;
+    merkleroot: string;
+    tx: TransactionWithPrevout[];
+    time: number;
+    mediantime: number;
+    nonce: number;
+    bits: string;
+    difficulty: number;
+    chainwork: string;
+    nTx: number;
+    previousblockhash: string;
+    nextblockhash: string;
+    ablastate?: {
+      epsilon: number;
+      beta: number;
+      blocksize: number;
+      blocksizelimit: number;
+      nextblocksizelimit: number;
+    };
+  };
+}
 
 export interface GetBlockchainInfo {
   method: 'getblockchaininfo';

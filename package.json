@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "a Typescript wrapper for interacting with the Bitcoin Cash Node (BCHN) API ",
   "type": "module",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "author": "",
   "scripts": {
     "build": "tsc",

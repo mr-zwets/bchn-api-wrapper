@@ -194,11 +194,21 @@ interface GetRawTransactionBase {
 }
 
 export interface GetRawTransactionVerbosity0 extends GetRawTransactionBase {
+  params: [
+    txid: string,
+    verbose?: false | 0,
+    blockhash?: string
+  ];
   response: string;
 }
 
 // Verbosity 1 (basic transaction info)
 export interface GetRawTransactionVerbosity1 extends GetRawTransactionBase {
+  params: [
+    txid: string,
+    verbose?: true | 1,
+    blockhash?: string
+  ];
   response: {
     hex: string;
     txid: string;
@@ -218,6 +228,11 @@ export interface GetRawTransactionVerbosity1 extends GetRawTransactionBase {
 
 // Verbosity 2 (includes input values and transaction fee)
 export interface GetRawTransactionVerbosity2 extends GetRawTransactionBase {
+  params: [
+    txid: string,
+    verbose?: 2,
+    blockhash?: string
+  ];
   response: {
     hex: string;
     txid: string;

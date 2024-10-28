@@ -26,11 +26,19 @@ interface GetBlockBase {
 
 // Verbosity = 0 (or false)
 export interface GetBlockVerbosity0 extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity?: 0 | false
+  ];
   response: string
 }
 
 // Verbosity = 1 (or true)
 export interface GetBlockVerbosity1 extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity?: 1 | true
+  ];
   response: {
     hash: string;
     confirmations: number;
@@ -106,10 +114,18 @@ export interface GetBlockHeaderBase {
 }
 
 export interface GetBlockHeaderVerbosity0 extends GetBlockHeaderBase {
+  params: [
+    hash_or_height: string| number,
+    verbosity?: false | 0
+  ];
   response: string;
 }
 
 export interface GetBlockHeaderVerbosity1 extends GetBlockHeaderBase {
+  params: [
+    hash_or_height: string| number,
+    verbosity?: true | 1
+  ];
   response: {
     hash: string;
     confirmations: number;
@@ -223,6 +239,11 @@ interface GetDsProofBase {
 
 // Verbosity = 0 (or false)
 export interface GetDsProofVerbosity0 extends GetDsProofBase {
+  params: [
+    dspid_or_txid_or_outpoint: string | { txid: string; vout: number },
+    verbosity?: 0 | false,
+    recursive?: boolean
+  ];
   response: {
     hex: string;
     txid: string | null;
@@ -232,6 +253,11 @@ export interface GetDsProofVerbosity0 extends GetDsProofBase {
 
 // Verbosity = 1
 export interface GetDsProofVerbosity1 extends GetDsProofBase {
+  params: [
+    dspid_or_txid_or_outpoint: string | { txid: string; vout: number },
+    verbosity?: 1,
+    recursive?: boolean
+  ];
   response: {
     hex: string;
     txid: string | null;
@@ -242,6 +268,11 @@ export interface GetDsProofVerbosity1 extends GetDsProofBase {
 
 // Verbosity = 2 (or true)
 export interface GetDsProofVerbosity2 extends GetDsProofBase {
+  params: [
+    dspid_or_txid_or_outpoint: string | { txid: string; vout: number },
+    verbosity?: 2 | true,
+    recursive?: boolean
+  ];
   response: {
     dspid: string;
     txid: string | null;
@@ -292,11 +323,19 @@ export interface GetDsProofListBase {
 
 // Verbosity = 0 (or false)
 export interface GetDsProofListVerbosity0 extends GetDsProofListBase {
+  params: [
+    verbosity?: 0 | false,
+    include_orphans?: boolean
+  ];
   response: string[]
 }
 
 // Verbosity = 1
 export interface GetDsProofListVerbosity1 extends GetDsProofListBase {
+  params: [
+    verbosity?: 1,
+    include_orphans?: boolean
+  ];
   response: {
     hex: string;
     txid: string | null;
@@ -305,6 +344,10 @@ export interface GetDsProofListVerbosity1 extends GetDsProofListBase {
 
 // Verbosity = 2 (or true)
 export interface GetDsProofListVerbosity2 extends GetDsProofListBase {
+  params: [
+    verbosity?: 2 | true,
+    include_orphans?: boolean
+  ];
   response: {
     dspid: string;
     txid: string | null;
@@ -352,11 +395,19 @@ interface GetMempoolAncestorsBase {
 
 // Verbosity 0 (false)
 export interface GetMempoolAncestorsVerbosity0 extends GetMempoolAncestorsBase {
+  params: [
+    txid: string,
+    verbose?: false | 0
+  ];
   response: string[];
 }
 
 // Verbosity 1 (true)
 export interface GetMempoolAncestorsVerbosity1 extends GetMempoolAncestorsBase {
+  params: [
+    txid: string,
+    verbose?: true | 1
+  ];
   response: {
     [transactionid: string]: {
       size: number;
@@ -381,11 +432,19 @@ interface GetMempoolDescendantsBase {
 
 // Verbosity 0 (false)
 export interface GetMempoolDescendantsVerbosity0 extends GetMempoolDescendantsBase {
+  params: [
+    txid: string,
+    verbose?: false | 0
+  ];
   response: string[];
 }
 
 // Verbosity 1 (true)
 export interface GetMempoolDescendantsVerbosity1 extends GetMempoolDescendantsBase {
+  params: [
+    txid: string,
+    verbose?: true | 1
+  ];
   response: {
     [transactionid: string]: {
       size: number;
@@ -440,11 +499,17 @@ interface GetRawMempoolBase {
 
 // Verbosity 0 (false)
 export interface GetRawMempoolVerbosity0 extends GetRawMempoolBase {
+  params: [
+    verbose?: false | 0
+  ];
   response: string[];
 }
 
 // Verbosity 1 (true)
 export interface GetRawMempoolVerbosity1 extends GetRawMempoolBase {
+  params: [
+    verbose?: true | 1
+  ];
   response: {
     [transactionid: string]: {
       size: number;

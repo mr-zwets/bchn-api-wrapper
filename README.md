@@ -43,8 +43,17 @@ Note that the REST-endpoints can be made public, but the RPC-endpoints should ne
 
 ## Install
 
-For now, you can clone the library locally.
-This library will be published to NPM in the future when it is more mature.
+Install the Bchn-API-Wrapper from NPM with:
+
+```bash
+npm install @mr-zwets/bchn-api-wrapper
+```
+
+or using yarn 
+
+```bash
+yarn add @mr-zwets/bchn-api-wrapper
+```
 
 ## REST usage
 
@@ -103,4 +112,18 @@ console.log(`The latest blockhash is ${latestBlockHash}`)
 // Get verbosity1 info about the latest block contents
 const fullBlockInfo = await rpcClient.request<GetBlockVerbosity1>("getblock", latestBlockHash, 1)
 console.log(JSON.stringify(fullBlockInfo))
+```
+
+### Run Tests
+
+The library has automated tests using vitest, run the testing suite with:
+
+```bash
+npm run test
+```
+
+or using yarn:
+
+```bash
+yarn test
 ```

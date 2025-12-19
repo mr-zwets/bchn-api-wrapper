@@ -3,21 +3,23 @@ import { setupServer, SetupServerApi } from 'msw/node';
 
 type jsonResult = { method: string; params?: unknown[] } | null | undefined
 
+const localhostUrl = 'http://localhost:8332';
+
 const server: SetupServerApi = setupServer(
   // Mock endpoint with a delay to simulate timeout
-  http.get('http://localhost:8332/rest/chaininfo.json', async() => {
+  http.get(`${localhostUrl}/rest/chaininfo.json`, async() => {
     // Introduce a delay longer than the timeout setting to simulate a timeout scenario
     await delay(3000)
     return HttpResponse.json({})
   }),
 
-  http.get('http://localhost:8332/rest/mempool/info.json', async() => {
+  http.get(`${localhostUrl}/rest/mempool/info.json`, async() => {
     // Mock normally working REST endpoint
     await delay(500)
     return HttpResponse.json({})
   }),
 
-  http.post('http://localhost:8332', async ({ request }) => {
+  http.post(`${localhostUrl}`, async ({ request }) => {
     const json = await request.json() as jsonResult;
 
     if (json === null || json === undefined) {

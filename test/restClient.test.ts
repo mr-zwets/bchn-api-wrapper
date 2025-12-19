@@ -1,8 +1,10 @@
 import { BchnRestClient } from '../src/index.js';
 
+const localhostUrl = 'http://localhost:8332';
+
 describe('BchnRestClient URL validation tests', () => {
   it('should create an instance with a valid URL', () => {
-    const client = new BchnRestClient({url: 'http://localhost:8332'});
+    const client = new BchnRestClient({url: localhostUrl});
     expect(client).toBeInstanceOf(BchnRestClient);
   });
 
@@ -17,7 +19,7 @@ describe('BchnRestClient URL validation tests', () => {
 
 describe('BchnRestClient Timeout Handling', () => {
   const config = {
-    url: 'http://localhost:8332',
+    url: localhostUrl,
     timeoutMs: 1000, // 1 second timeout
   };
   const restClient = new BchnRestClient(config);

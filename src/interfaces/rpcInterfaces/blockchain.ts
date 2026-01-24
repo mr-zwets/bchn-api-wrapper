@@ -24,6 +24,37 @@ interface GetBlockBase {
   ];
 }
 
+// ABLA state object (Adaptive Block Limit Algorithm, activated May 2024)
+export interface AblaState {
+  epsilon: number;
+  beta: number;
+  blocksize: number;
+  blocksizelimit: number;
+  nextblocksizelimit: number;
+}
+
+// Base block response fields shared across verbosity levels
+interface BlockResponseBase {
+  hash: string;
+  confirmations: number;
+  size: number;
+  height: number;
+  version: number;
+  versionHex: string;
+  merkleroot: string;
+  time: number;
+  mediantime: number;
+  nonce: number;
+  bits: string;
+  difficulty: number;
+  chainwork: string;
+  nTx: number;
+  // Not present on genesis block (height 0)
+  previousblockhash: string;
+  // Not present on chain tip
+  nextblockhash: string;
+}
+
 // Verbosity = 0 (or false)
 export interface GetBlockVerbosity0 extends GetBlockBase {
   params: [
@@ -33,75 +64,71 @@ export interface GetBlockVerbosity0 extends GetBlockBase {
   response: string
 }
 
-// Verbosity = 1 (or true)
+// Verbosity 1 response (tx as string array)
+interface BlockResponseVerbosity1 extends BlockResponseBase {
+  tx: string[];
+}
+
+// Verbosity = 1 (or true) - works for any block
 export interface GetBlockVerbosity1 extends GetBlockBase {
   params: [
     blockhash: string,
     verbosity?: 1 | true
   ];
-  response: {
-    hash: string;
-    confirmations: number;
-    size: number;
-    height: number;
-    version: number;
-    versionHex: string;
-    merkleroot: string;
-    tx : string[]
-    time: number;
-    mediantime: number;
-    nonce: number;
-    bits: string;
-    difficulty: number;
-    chainwork: string;
-    nTx: number;
-    previousblockhash: string;
-    nextblockhash: string;
-    ablastate: {
-      epsilon: number;
-      beta: number;
-      blocksize: number;
-      blocksizelimit: number;
-      nextblocksizelimit: number;
-    }
-  }
+  response: BlockResponseVerbosity1 & { ablastate?: AblaState };
 }
 
-// Verbosity = 2
+// Verbosity = 1 (or true) - for blocks before ABLA activation (May 2024)
+export interface GetBlockVerbosity1PreAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity?: 1 | true
+  ];
+  response: BlockResponseVerbosity1;
+}
+
+// Verbosity = 1 (or true) - for blocks after ABLA activation (May 2024)
+export interface GetBlockVerbosity1PostAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity?: 1 | true
+  ];
+  response: BlockResponseVerbosity1 & { ablastate: AblaState };
+}
+
+// Verbosity 2 response (tx as object array with txid and fee)
+interface BlockResponseVerbosity2 extends BlockResponseBase {
+  tx: {
+    txid: string;
+    fee?: number;
+  }[];
+}
+
+// Verbosity = 2 - works for any block
 export interface GetBlockVerbosity2 extends GetBlockBase {
   params: [
     blockhash: string,
     verbosity: 2
   ];
-  response: {
-    hash: string;
-    confirmations: number;
-    size: number;
-    height: number;
-    version: number;
-    versionHex: string;
-    merkleroot: string;
-    tx: {
-      txid: string;
-      fee?: number;
-    }[];
-    time: number;
-    mediantime: number;
-    nonce: number;
-    bits: string;
-    difficulty: number;
-    chainwork: string;
-    nTx: number;
-    previousblockhash: string;
-    nextblockhash: string;
-    ablastate?: {
-      epsilon: number;
-      beta: number;
-      blocksize: number;
-      blocksizelimit: number;
-      nextblocksizelimit: number;
-    };
-  };
+  response: BlockResponseVerbosity2 & { ablastate?: AblaState };
+}
+
+// Verbosity = 2 - for blocks before ABLA activation (May 2024)
+export interface GetBlockVerbosity2PreAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 2
+  ];
+  response: BlockResponseVerbosity2;
+}
+
+// Verbosity = 2 - for blocks after ABLA activation (May 2024)
+export interface GetBlockVerbosity2PostAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 2
+  ];
+  response: BlockResponseVerbosity2 & { ablastate: AblaState };
 }
 
 export interface TransactionInputWithPrevout extends TransactionInput {
@@ -124,38 +151,36 @@ export interface TransactionWithPrevout extends Omit<Transaction, 'vin'> {
   vin: TransactionInputWithPrevout[]; // Use the extended input type with `prevout`
 }
 
-// Verbosity = 3
+// Verbosity 3 response (full transaction details with prevout)
+interface BlockResponseVerbosity3 extends BlockResponseBase {
+  tx: TransactionWithPrevout[];
+}
+
+// Verbosity = 3 - works for any block
 export interface GetBlockVerbosity3 extends GetBlockBase {
   params: [
     blockhash: string,
     verbosity: 3
   ];
-  response: {
-    hash: string;
-    confirmations: number;
-    size: number;
-    height: number;
-    version: number;
-    versionHex: string;
-    merkleroot: string;
-    tx: TransactionWithPrevout[];
-    time: number;
-    mediantime: number;
-    nonce: number;
-    bits: string;
-    difficulty: number;
-    chainwork: string;
-    nTx: number;
-    previousblockhash: string;
-    nextblockhash: string;
-    ablastate?: {
-      epsilon: number;
-      beta: number;
-      blocksize: number;
-      blocksizelimit: number;
-      nextblocksizelimit: number;
-    };
-  };
+  response: BlockResponseVerbosity3 & { ablastate?: AblaState };
+}
+
+// Verbosity = 3 - for blocks before ABLA activation (May 2024)
+export interface GetBlockVerbosity3PreAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 3
+  ];
+  response: BlockResponseVerbosity3;
+}
+
+// Verbosity = 3 - for blocks after ABLA activation (May 2024)
+export interface GetBlockVerbosity3PostAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 3
+  ];
+  response: BlockResponseVerbosity3 & { ablastate: AblaState };
 }
 
 // ByteCodePattern for script pattern recognition (v29.0.0+)
@@ -208,38 +233,36 @@ export interface TransactionWithPattern {
   fee?: number;
 }
 
-// Verbosity = 4 (includes byteCodePattern)
+// Verbosity 4 response (includes byteCodePattern, v29.0.0+)
+interface BlockResponseVerbosity4 extends BlockResponseBase {
+  tx: TransactionWithPattern[];
+}
+
+// Verbosity = 4 - works for any block
 export interface GetBlockVerbosity4 extends GetBlockBase {
   params: [
     blockhash: string,
     verbosity: 4
   ];
-  response: {
-    hash: string;
-    confirmations: number;
-    size: number;
-    height: number;
-    version: number;
-    versionHex: string;
-    merkleroot: string;
-    tx: TransactionWithPattern[];
-    time: number;
-    mediantime: number;
-    nonce: number;
-    bits: string;
-    difficulty: number;
-    chainwork: string;
-    nTx: number;
-    previousblockhash: string;
-    nextblockhash: string;
-    ablastate?: {
-      epsilon: number;
-      beta: number;
-      blocksize: number;
-      blocksizelimit: number;
-      nextblocksizelimit: number;
-    };
-  };
+  response: BlockResponseVerbosity4 & { ablastate?: AblaState };
+}
+
+// Verbosity = 4 - for blocks before ABLA activation (May 2024)
+export interface GetBlockVerbosity4PreAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 4
+  ];
+  response: BlockResponseVerbosity4;
+}
+
+// Verbosity = 4 - for blocks after ABLA activation (May 2024)
+export interface GetBlockVerbosity4PostAbla extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 4
+  ];
+  response: BlockResponseVerbosity4 & { ablastate: AblaState };
 }
 
 export interface GetBlockchainInfo {
@@ -263,9 +286,13 @@ export interface GetBlockchainInfo {
     warnings: string;
     upgrade_status: {
       name: string;
-      description: string;
-      activation_time: number;
-      is_activated: boolean;
+      mempool_activated: boolean;
+      mempool_activation_mtp: number;
+      block_preactivation_height: number;
+      block_preactivation_hash: string;
+      block_postactivation_height: number;
+      block_postactivation_hash: string;
+      software_expiration_time: number;
     };
   }
 }
@@ -300,35 +327,52 @@ export interface GetBlockHeaderVerbosity0 extends GetBlockHeaderBase {
   response: string;
 }
 
+// Base header response fields
+interface HeaderResponseBase {
+  hash: string;
+  confirmations: number;
+  height: number;
+  version: number;
+  versionHex: string;
+  merkleroot: string;
+  time: number;
+  mediantime: number;
+  nonce: number;
+  bits: string;
+  difficulty: number;
+  chainwork: string;
+  nTx: number;
+  // Not present on genesis block (height 0)
+  previousblockhash: string;
+  // Not present on chain tip
+  nextblockhash: string;
+}
+
+// Verbosity = 1 - works for any block
 export interface GetBlockHeaderVerbosity1 extends GetBlockHeaderBase {
   params: [
     hash_or_height: string| number,
     verbosity?: true | 1
   ];
-  response: {
-    hash: string;
-    confirmations: number;
-    height: number;
-    version: number;
-    versionHex: string;
-    merkleroot: string;
-    time: number;
-    mediantime: number;
-    nonce: number;
-    bits: string;
-    difficulty: number;
-    chainwork: string;
-    nTx: number;
-    previousblockhash: string;
-    nextblockhash: string;
-    ablastate : {
-      epsilon: number;
-      beta: number;
-      blocksize: number;
-      blocksizelimit: number;
-      nextblocksizelimit: number;
-    }
-  };
+  response: HeaderResponseBase & { ablastate?: AblaState };
+}
+
+// Verbosity = 1 - for blocks before ABLA activation (May 2024)
+export interface GetBlockHeaderVerbosity1PreAbla extends GetBlockHeaderBase {
+  params: [
+    hash_or_height: string| number,
+    verbosity?: true | 1
+  ];
+  response: HeaderResponseBase;
+}
+
+// Verbosity = 1 - for blocks after ABLA activation (May 2024)
+export interface GetBlockHeaderVerbosity1PostAbla extends GetBlockHeaderBase {
+  params: [
+    hash_or_height: string| number,
+    verbosity?: true | 1
+  ];
+  response: HeaderResponseBase & { ablastate: AblaState };
 }
 
 export interface GetBlockStats {

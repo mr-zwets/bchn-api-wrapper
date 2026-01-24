@@ -1,6 +1,16 @@
 import type { Transaction } from "../interfaces.js";
 
-export interface BlockInfoNoTxDetails {
+// ABLA state object (Adaptive Block Limit Algorithm, activated May 2024)
+export interface AblaState {
+  epsilon: number;
+  beta: number;
+  blocksize: number;
+  blocksizelimit: number;
+  nextblocksizelimit: number;
+}
+
+// Base block info fields
+interface BlockInfoBase {
   hash: string;
   confirmations: number;
   size: number;
@@ -8,7 +18,6 @@ export interface BlockInfoNoTxDetails {
   version: number;
   versionHex: string;
   merkleroot: string;
-  tx : string[]
   time: number;
   mediantime: number;
   nonce: number;
@@ -16,22 +25,48 @@ export interface BlockInfoNoTxDetails {
   difficulty: number;
   chainwork: string;
   nTx: number;
+  // Not present on genesis block (height 0)
   previousblockhash: string;
+  // Not present on chain tip
   nextblockhash: string;
-  ablastate: {
-    epsilon: number;
-    beta: number;
-    blocksize: number;
-    blocksizelimit: number;
-    nextblocksizelimit: number;
-  }
 }
 
-export interface BlockInfoTxDetails extends Omit<BlockInfoNoTxDetails, 'tx'>{
-  tx: Transaction[]
+// Block info without tx details - works for any block
+export interface BlockInfoNoTxDetails extends BlockInfoBase {
+  tx: string[];
+  ablastate?: AblaState;
 }
 
-export interface HeaderInfo {
+// Block info without tx details - for blocks before ABLA activation (May 2024)
+export interface BlockInfoNoTxDetailsPreAbla extends BlockInfoBase {
+  tx: string[];
+}
+
+// Block info without tx details - for blocks after ABLA activation (May 2024)
+export interface BlockInfoNoTxDetailsPostAbla extends BlockInfoBase {
+  tx: string[];
+  ablastate: AblaState;
+}
+
+// Block info with tx details - works for any block
+export interface BlockInfoTxDetails extends BlockInfoBase {
+  tx: Transaction[];
+  ablastate?: AblaState;
+}
+
+// Block info with tx details - for blocks before ABLA activation (May 2024)
+export interface BlockInfoTxDetailsPreAbla extends BlockInfoBase {
+  tx: Transaction[];
+}
+
+// Block info with tx details - for blocks after ABLA activation (May 2024)
+export interface BlockInfoTxDetailsPostAbla extends BlockInfoBase {
+  tx: Transaction[];
+  ablastate: AblaState;
+}
+
+// Base header info fields
+interface HeaderInfoBase {
   hash: string;
   confirmations: number;
   height: number;
@@ -45,15 +80,23 @@ export interface HeaderInfo {
   difficulty: number;
   chainwork: string;
   nTx: number;
+  // Not present on genesis block (height 0)
   previousblockhash: string;
+  // Not present on chain tip
   nextblockhash: string;
-  ablastate: {
-    epsilon: number;
-    beta: number;
-    blocksize: number;
-    blocksizelimit: number;
-    nextblocksizelimit: number;
-  }
+}
+
+// Header info - works for any block
+export interface HeaderInfo extends HeaderInfoBase {
+  ablastate?: AblaState;
+}
+
+// Header info - for blocks before ABLA activation (May 2024)
+export interface HeaderInfoPreAbla extends HeaderInfoBase {}
+
+// Header info - for blocks after ABLA activation (May 2024)
+export interface HeaderInfoPostAbla extends HeaderInfoBase {
+  ablastate: AblaState;
 }
 
 export interface ChainInfo {

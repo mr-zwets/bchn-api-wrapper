@@ -34,5 +34,6 @@
   "bugs": {
     "url": "https://github.com/mr-zwets/bchn-api-wrapper/issues"
   },
-  "homepage": "https://github.com/mr-zwets/bchn-api-wrapper#readme"
+  "homepage": "https://github.com/mr-zwets/bchn-api-wrapper#readme",
+  "packageManager": "pnpm@10.12.1"
 }

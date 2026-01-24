@@ -47,16 +47,10 @@ Note that the REST-endpoints can be made public, but the RPC-endpoints should ne
 
 ## Install
 
-Install the Bchn-API-Wrapper from NPM with:
+Install the BCHN-API-Wrapper from NPM with:
 
 ```bash
-npm install @mr-zwets/bchn-api-wrapper
-```
-
-or using yarn 
-
-```bash
-yarn add @mr-zwets/bchn-api-wrapper
+pnpm install @mr-zwets/bchn-api-wrapper
 ```
 
 ## REST usage
@@ -123,11 +117,5 @@ console.log(JSON.stringify(fullBlockInfo))
 The library has automated tests using vitest, run the testing suite with:
 
 ```bash
-npm run test
-```
-
-or using yarn:
-
-```bash
-yarn test
+pnpm run test
 ```

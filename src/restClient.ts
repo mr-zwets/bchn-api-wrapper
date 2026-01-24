@@ -13,6 +13,7 @@ import type {
 } from "./interfaces/restInterfaces/interfaces.js";
 import { validateUrl } from "./utils/utils.js";
 
+/** REST client for read-only BCHN blockchain access via the REST interface. */
 export class BchnRestClient {
   private baseUrl: string;
   private timeoutMs: number;
@@ -32,11 +33,11 @@ export class BchnRestClient {
       const response = await fetch(`${this.baseUrl}/rest/${endpoint}`, {
         signal: AbortSignal.timeout(this.timeoutMs),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Error fetching data from ${endpoint}: ${response.statusText}`);
       }
-      
+
       if (format === 'json') {
         return await response.json() as ResponseType<TFormat, T>;
       } else {
@@ -44,7 +45,7 @@ export class BchnRestClient {
       }
     } catch(error) {
       let errorMessage: string | undefined
-      
+
       // Check if the error is due to timeout or other fetch-related issues
       if (typeof error === 'string') {
         errorMessage = error;
@@ -57,21 +58,23 @@ export class BchnRestClient {
         this.logger.error(`Unknown error occurred during request to ${endpoint}`);
         throw new Error(`Unknown error: ${error}`);
       }
-      
+
       // Always rethrow the error after logging
       throw new Error(errorMessage);
     }
   }
 
-  // Get transaction details by transaction hash
+  /** Returns transaction details by txid. */
   async getTransaction<TFormat extends formatOptions = 'json'>(
     txid: string, format:TFormat = 'json' as TFormat
   ) {
     return this.fetchFromNode<TxDetails, TFormat>(`tx/${txid}.${format}`, format);
   }
 
-  // getBlock overload signatures 
+  // getBlock overload signatures
   // This is needed so the getBlock return type can depend on the 'includeTxDetails' boolean flag
+
+  /** Returns block data. Use includeTxDetails=true for full transaction objects. */
   async getBlock<TFormat extends formatOptions = 'json'>(
     blockhash: string, includeTxDetails: true, format?:TFormat
   ): Promise<TFormat extends 'json' ? BlockInfoTxDetails : string>;
@@ -88,19 +91,19 @@ export class BchnRestClient {
     return this.fetchFromNode(`${path}/${blockhash}.${format}`, format);
   }
 
-  // Get block headers starting from a specific block hash
+  /** Returns block headers starting from a specific block hash. */
   async getBlockHeaders<TFormat extends formatOptions = 'json'>(
     count: number, blockhash: string, format:TFormat = 'json' as TFormat
   ) {
     return this.fetchFromNode<HeaderInfo, TFormat>(`headers/${count}/${blockhash}.${format}`, format);
   }
 
-  // Get chain info (chain state details)
+  /** Returns current chain state (network, sync progress, best block). */
   async getChainInfo() {
     return this.fetchFromNode<ChainInfo, 'json'>('chaininfo.json', 'json');
   }
 
-  // Query UTXO set based on specific outpoints (txid and vout)
+  /** Queries UTXO set for specific outpoints. Outpoints format: "txid-vout". */
   async getUTXOs<TFormat extends formatOptions = 'json'>(
     checkmempool: boolean, outpoints: string[], format:TFormat = 'json' as TFormat
   ) {
@@ -109,22 +112,22 @@ export class BchnRestClient {
     return this.fetchFromNode<UtxosInfo, TFormat>(endpoint, format);
   }
 
-  // Get mempool information (basic)
+  /** Returns mempool statistics (size, bytes, fee rates). */
   async getMempoolInfo() {
     return this.fetchFromNode<MempoolInfo, 'json'>('mempool/info.json', 'json');
   }
 
-  // Get mempool contents (transactions currently in the mempool)
+  /** Returns all transactions currently in the mempool. */
   async getMempoolContents() {
     return this.fetchFromNode<MempoolContent, 'json'>('mempool/contents.json', 'json');
   }
 
-  // Get block with pattern data (v29.0.0+)
+  /** Returns block with bytecode pattern data (v29.0.0+). */
   async getBlockWithPatterns(blockhash: string) {
     return this.fetchFromNode<BlockInfoWithPatterns, 'json'>(`block/withpatterns/${blockhash}.json`, 'json');
   }
 
-  // Get transaction with pattern data (v29.0.0+)
+  /** Returns transaction with bytecode pattern data (v29.0.0+). */
   async getTransactionWithPatterns(txid: string) {
     return this.fetchFromNode<TxDetailsWithPatterns, 'json'>(`tx/withpatterns/${txid}.json`, 'json');
   }

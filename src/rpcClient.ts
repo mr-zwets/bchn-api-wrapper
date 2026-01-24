@@ -2,11 +2,12 @@ import type { RpcClientConfig, RpcRequest } from "./interfaces/interfaces.js";
 import { getRandomId, validateAndConstructUrl } from "./utils/utils.js";
 import { RetryLimitExceededError } from "./utils/errors.js";
 
+/** RPC client for full BCHN node interaction via JSON-RPC. */
 export class BchnRpcClient {
   private url: string
   private rpcUser: string
   private rpcPassword: string
-  
+
   private maxRetries: number // number of retries before throwing an exception
   private retryDelayMs: number // delay between each retry
   private logger: typeof console // logger
@@ -16,22 +17,28 @@ export class BchnRpcClient {
     this.url = validateAndConstructUrl(config)
     if(!config.rpcUser) throw new Error('Need to provide rpcUser in config')
     if(!config.rpcPassword) throw new Error('Need to provide rpcPassword in config')
-    this.rpcUser = config.rpcUser;       
-    this.rpcPassword= config.rpcPassword;  
+    this.rpcUser = config.rpcUser;
+    this.rpcPassword= config.rpcPassword;
 
     // optional config
-    this.maxRetries = config.maxRetries ?? 0;       
-    this.retryDelayMs= config.retryDelayMs ?? 100;  
-    this.logger = config.logger ?? console;         
-    this.timeoutMs = config.timeoutMs ?? 5000;      
+    this.maxRetries = config.maxRetries ?? 0;
+    this.retryDelayMs= config.retryDelayMs ?? 100;
+    this.logger = config.logger ?? console;
+    this.timeoutMs = config.timeoutMs ?? 5000;
   }
 
+  /**
+   * Sends a typed RPC request to the BCHN node.
+   * @example
+   * const result = await client.request<GetBlockCount>("getblockcount");
+   * const block = await client.request<GetBlockVerbosity1>("getblock", hash, 1);
+   */
   async request<T extends RpcRequest>(
     endpoint: T['method'],
     ...params: T['params']
   ): Promise<T['response']> {
     const auth = Buffer.from(`${this.rpcUser}:${this.rpcPassword}`).toString('base64');
-    
+
     // Retry logic
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
       try {
@@ -45,19 +52,19 @@ export class BchnRpcClient {
           body: JSON.stringify({ jsonrpc: '2.0', method: endpoint, params, id: getRandomId() }),
           signal: AbortSignal.timeout(this.timeoutMs),
         });
-  
+
         const result = await response.json();
-  
+
         // Handle response errors
         if (!response.ok || result.error) {
           throw new Error(`Error: ${result.error?.message || response.statusText}`);
         }
-  
+
         return result.result as T['response'];  // Return the result if successful
-  
+
       } catch (error) {
         let errorMessage: string | undefined
-        
+
         // Check if the error is due to timeout or other fetch-related issues
         if(typeof error == 'string'){
           errorMessage = error
@@ -72,9 +79,9 @@ export class BchnRpcClient {
           // If error is an instance of Error, you can safely access its properties
           errorMessage = error.message
           this.logger.error(`Request failed with error: ${error.message}`);
-          
+
         }
-  
+
         // Retry if allowed
         if (attempt < this.maxRetries) {
           this.logger.warn(`Retrying request... (${attempt + 1}/${this.maxRetries})`);
@@ -85,7 +92,7 @@ export class BchnRpcClient {
         }
       }
     }
-  
+
     // This line ensures TypeScript is satisfied that a value will always be returned, but
     // it should never be reached if the retries fail, as the last attempt should throw an error.
     throw new Error('Request failed unexpectedly');

@@ -1,6 +1,7 @@
 /* --- Control Commands --- */
 // progress 6/6
 
+/** Returns memory usage information. */
 export interface GetMemoryInfo {
   method: 'getmemoryinfo';
   params: [
@@ -18,6 +19,7 @@ export interface GetMemoryInfo {
   };
 }
 
+/** Returns details about the RPC server. */
 export interface GetRpcInfo {
   method: 'getrpcinfo';
   params: [];
@@ -30,6 +32,7 @@ export interface GetRpcInfo {
   };
 }
 
+/** Returns help text for RPC commands. */
 export interface Help {
   method: 'help';
   params: [
@@ -38,6 +41,7 @@ export interface Help {
   response: string;
 }
 
+/** Gets or sets logging categories. */
 export interface Logging {
   method: 'logging';
   params: [
@@ -49,12 +53,14 @@ export interface Logging {
   };
 }
 
+/** Stops the BCHN server. */
 export interface Stop {
   method: 'stop';
   params: [];
   response: string;
 }
 
+/** Returns server uptime in seconds. */
 export interface Uptime {
   method: 'uptime';
   params: [];

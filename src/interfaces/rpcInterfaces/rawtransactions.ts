@@ -3,6 +3,7 @@
 
 import  type { TokenData, Transaction, TransactionInput, TransactionOutput } from "../interfaces.js";
 
+/** Combines multiple PSBTs into one. */
 export interface CombinePsbt {
   method: 'decoderawtransaction';
   params: [
@@ -11,6 +12,7 @@ export interface CombinePsbt {
   response: string
 }
 
+/** Combines multiple raw transactions into one. */
 export interface CombineRawTransaction {
   method: 'combinerawtransaction';
   params: [
@@ -19,6 +21,7 @@ export interface CombineRawTransaction {
   response: string;
 }
 
+/** Converts a raw transaction to PSBT format. */
 export interface ConvertToPsbt {
   method: 'converttopsbt';
   params: [
@@ -28,6 +31,7 @@ export interface ConvertToPsbt {
   response: string;
 }
 
+/** Creates an unsigned PSBT. */
 export interface CreatePsbt {
   method: 'createpsbt';
   params: [
@@ -51,6 +55,7 @@ export interface CreatePsbt {
   response: string;
 }
 
+/** Creates an unsigned raw transaction. */
 export interface CreateRawTransaction {
   method: 'createrawtransaction';
   params: [
@@ -74,6 +79,7 @@ export interface CreateRawTransaction {
   response: string;
 }
 
+/** Decodes a PSBT to inspect its contents. */
 export interface DecodePsbt {
   method: 'decodepsbt';
   params: [
@@ -88,6 +94,7 @@ export interface DecodePsbt {
   };
 }
 
+/** PSBT input structure. */
 interface PsbtInput {
   utxo?: {
     amount: number;
@@ -110,24 +117,28 @@ interface PsbtInput {
   unknown?: Record<string, string>;
 }
 
+/** PSBT output structure. */
 interface PsbtOutput {
   redeem_script?: RedeemScript;
   bip32_derivs?: Bip32Derivation[];
   unknown?: Record<string, string>;
 }
 
+/** Redeem script in PSBT. */
 interface RedeemScript {
   asm: string;
   hex: string;
   type: string;
 }
 
+/** BIP32 derivation path info. */
 interface Bip32Derivation {
   pubkey: string;
   master_fingerprint: string;
   path: string;
 }
 
+/** Decodes a raw transaction hex string. */
 export interface DecodeRawTransaction {
   method: 'decoderawtransaction';
   params: [
@@ -136,6 +147,7 @@ export interface DecodeRawTransaction {
   response: Transaction
 }
 
+/** Decodes a script hex string. */
 export interface DecodeScript {
   method: 'decodescript';
   params: [
@@ -150,6 +162,7 @@ export interface DecodeScript {
   };
 }
 
+/** Finalizes a PSBT, extracting the raw transaction if complete. */
 export interface FinalizePsbt {
   method: 'finalizepsbt';
   params: [
@@ -163,6 +176,7 @@ export interface FinalizePsbt {
   }
 }
 
+/** Adds inputs to a raw transaction to meet output value. */
 export interface FundRawTransaction {
   method: 'fundrawtransaction';
   params: [
@@ -193,6 +207,7 @@ interface GetRawTransactionBase {
   ];
 }
 
+/** Verbosity 0: Returns raw transaction as hex string. */
 export interface GetRawTransactionVerbosity0 extends GetRawTransactionBase {
   params: [
     txid: string,
@@ -202,7 +217,7 @@ export interface GetRawTransactionVerbosity0 extends GetRawTransactionBase {
   response: string;
 }
 
-// Verbosity 1 (basic transaction info)
+/** Verbosity 1: Returns decoded transaction with basic info. */
 export interface GetRawTransactionVerbosity1 extends GetRawTransactionBase {
   params: [
     txid: string,
@@ -226,7 +241,7 @@ export interface GetRawTransactionVerbosity1 extends GetRawTransactionBase {
   };
 }
 
-// Verbosity 2 (includes input values and transaction fee)
+/** Verbosity 2: Returns decoded transaction with input values and fee. */
 export interface GetRawTransactionVerbosity2 extends GetRawTransactionBase {
   params: [
     txid: string,
@@ -251,6 +266,7 @@ export interface GetRawTransactionVerbosity2 extends GetRawTransactionBase {
   };
 }
 
+/** Transaction input with previous output value (verbosity 2). */
 interface TransactionInputVerbosity2 extends TransactionInput {
   value?: number;
   scriptPubKey?: {
@@ -262,7 +278,7 @@ interface TransactionInputVerbosity2 extends TransactionInput {
   tokenData?: TokenData;
 }
 
-
+/** Broadcasts a signed raw transaction. */
 export interface SendRawTransaction {
   method: 'sendrawtransaction';
   params: [
@@ -272,6 +288,7 @@ export interface SendRawTransaction {
   response: string;
 }
 
+/** Signs a raw transaction with provided private keys. */
 export interface SignRawTransactionWithKey {
   method: 'signrawtransactionwithkey';
   params: [
@@ -300,6 +317,7 @@ export interface SignRawTransactionWithKey {
   };
 }
 
+/** Tests if raw transactions would be accepted to mempool. */
 export interface TestMempoolAccept {
   method: 'testmempoolaccept';
   params: [

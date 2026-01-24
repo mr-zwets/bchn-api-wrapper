@@ -3,6 +3,7 @@
 
 import type { TokenData, Transaction, TransactionInput } from "../interfaces.js";
 
+/** Finalize a block by hash (Avalanche post-consensus). */
 export interface FinalizeBlock {
   method: 'finalizeblock';
   params: [
@@ -10,6 +11,7 @@ export interface FinalizeBlock {
   ];
 }
 
+/** Returns the hash of the best (tip) block in the most-work chain. */
 export interface GetBestBlockHash {
   method: 'getbestblockhash';
   params: [];
@@ -24,7 +26,7 @@ interface GetBlockBase {
   ];
 }
 
-// ABLA state object (Adaptive Block Limit Algorithm, activated May 2024)
+/** Adaptive Block Limit Algorithm state (activated May 2024). */
 export interface AblaState {
   epsilon: number;
   beta: number;
@@ -33,7 +35,11 @@ export interface AblaState {
   nextblocksizelimit: number;
 }
 
-// Base block response fields shared across verbosity levels
+/**
+ * Base block response fields shared across verbosity levels.
+ * @note `previousblockhash` not present on genesis block (height 0).
+ * @note `nextblockhash` not present on chain tip.
+ */
 interface BlockResponseBase {
   hash: string;
   confirmations: number;
@@ -49,13 +55,11 @@ interface BlockResponseBase {
   difficulty: number;
   chainwork: string;
   nTx: number;
-  // Not present on genesis block (height 0)
   previousblockhash: string;
-  // Not present on chain tip
   nextblockhash: string;
 }
 
-// Verbosity = 0 (or false)
+/** Verbosity 0: Returns hex-encoded block data. */
 export interface GetBlockVerbosity0 extends GetBlockBase {
   params: [
     blockhash: string,
@@ -64,12 +68,12 @@ export interface GetBlockVerbosity0 extends GetBlockBase {
   response: string
 }
 
-// Verbosity 1 response (tx as string array)
+/** Verbosity 1 response: block with tx IDs as string array. */
 interface BlockResponseVerbosity1 extends BlockResponseBase {
   tx: string[];
 }
 
-// Verbosity = 1 (or true) - works for any block
+/** Verbosity 1: Block with tx IDs - works for any block. */
 export interface GetBlockVerbosity1 extends GetBlockBase {
   params: [
     blockhash: string,
@@ -78,7 +82,7 @@ export interface GetBlockVerbosity1 extends GetBlockBase {
   response: BlockResponseVerbosity1 & { ablastate?: AblaState };
 }
 
-// Verbosity = 1 (or true) - for blocks before ABLA activation (May 2024)
+/** Verbosity 1: Block with tx IDs - for blocks before ABLA activation (May 2024). */
 export interface GetBlockVerbosity1PreAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -87,7 +91,7 @@ export interface GetBlockVerbosity1PreAbla extends GetBlockBase {
   response: BlockResponseVerbosity1;
 }
 
-// Verbosity = 1 (or true) - for blocks after ABLA activation (May 2024)
+/** Verbosity 1: Block with tx IDs - for blocks after ABLA activation (May 2024). */
 export interface GetBlockVerbosity1PostAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -96,7 +100,7 @@ export interface GetBlockVerbosity1PostAbla extends GetBlockBase {
   response: BlockResponseVerbosity1 & { ablastate: AblaState };
 }
 
-// Verbosity 2 response (tx as object array with txid and fee)
+/** Verbosity 2 response: block with tx objects containing txid and fee. */
 interface BlockResponseVerbosity2 extends BlockResponseBase {
   tx: {
     txid: string;
@@ -104,7 +108,7 @@ interface BlockResponseVerbosity2 extends BlockResponseBase {
   }[];
 }
 
-// Verbosity = 2 - works for any block
+/** Verbosity 2: Block with txid/fee objects - works for any block. */
 export interface GetBlockVerbosity2 extends GetBlockBase {
   params: [
     blockhash: string,
@@ -113,7 +117,7 @@ export interface GetBlockVerbosity2 extends GetBlockBase {
   response: BlockResponseVerbosity2 & { ablastate?: AblaState };
 }
 
-// Verbosity = 2 - for blocks before ABLA activation (May 2024)
+/** Verbosity 2: Block with txid/fee objects - for blocks before ABLA activation (May 2024). */
 export interface GetBlockVerbosity2PreAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -122,7 +126,7 @@ export interface GetBlockVerbosity2PreAbla extends GetBlockBase {
   response: BlockResponseVerbosity2;
 }
 
-// Verbosity = 2 - for blocks after ABLA activation (May 2024)
+/** Verbosity 2: Block with txid/fee objects - for blocks after ABLA activation (May 2024). */
 export interface GetBlockVerbosity2PostAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -131,6 +135,7 @@ export interface GetBlockVerbosity2PostAbla extends GetBlockBase {
   response: BlockResponseVerbosity2 & { ablastate: AblaState };
 }
 
+/** Transaction input extended with previous output data. */
 export interface TransactionInputWithPrevout extends TransactionInput {
   prevout?: {
     generated: boolean;
@@ -146,17 +151,17 @@ export interface TransactionInputWithPrevout extends TransactionInput {
   };
 }
 
-// GetBlockVerbosity3 uses enhanced TransactionInputWithPrevout
+/** Transaction with prevout data on inputs (used by verbosity 3). */
 export interface TransactionWithPrevout extends Omit<Transaction, 'vin'> {
-  vin: TransactionInputWithPrevout[]; // Use the extended input type with `prevout`
+  vin: TransactionInputWithPrevout[];  // Use the extended input type with `prevout`
 }
 
-// Verbosity 3 response (full transaction details with prevout)
+/** Verbosity 3 response: full transaction details with prevout. */
 interface BlockResponseVerbosity3 extends BlockResponseBase {
   tx: TransactionWithPrevout[];
 }
 
-// Verbosity = 3 - works for any block
+/** Verbosity 3: Block with full tx objects including prevout - works for any block. */
 export interface GetBlockVerbosity3 extends GetBlockBase {
   params: [
     blockhash: string,
@@ -165,7 +170,7 @@ export interface GetBlockVerbosity3 extends GetBlockBase {
   response: BlockResponseVerbosity3 & { ablastate?: AblaState };
 }
 
-// Verbosity = 3 - for blocks before ABLA activation (May 2024)
+/** Verbosity 3: Block with full tx objects including prevout - for blocks before ABLA activation (May 2024). */
 export interface GetBlockVerbosity3PreAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -174,7 +179,7 @@ export interface GetBlockVerbosity3PreAbla extends GetBlockBase {
   response: BlockResponseVerbosity3;
 }
 
-// Verbosity = 3 - for blocks after ABLA activation (May 2024)
+/** Verbosity 3: Block with full tx objects including prevout - for blocks after ABLA activation (May 2024). */
 export interface GetBlockVerbosity3PostAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -183,13 +188,14 @@ export interface GetBlockVerbosity3PostAbla extends GetBlockBase {
   response: BlockResponseVerbosity3 & { ablastate: AblaState };
 }
 
-// ByteCodePattern for script pattern recognition (v29.0.0+)
+/** Script fingerprint and pattern info for bytecode analysis (v29.0.0+). */
 export interface ByteCodePattern {
   fingerprint: string;
   pattern: string;
   patternArgsInfo?: string[];
 }
 
+/** Script with optional bytecode pattern metadata (v29.0.0+). */
 export interface ScriptPubKeyWithPattern {
   asm: string;
   hex: string;
@@ -198,6 +204,7 @@ export interface ScriptPubKeyWithPattern {
   byteCodePattern?: ByteCodePattern;
 }
 
+/** Transaction input with prevout and pattern info (v29.0.0+). */
 export interface TransactionInputWithPattern extends TransactionInput {
   prevout?: {
     generated: boolean;
@@ -215,6 +222,7 @@ export interface TransactionInputWithPattern extends TransactionInput {
   };
 }
 
+/** Transaction output with pattern-enabled scriptPubKey (v29.0.0+). */
 export interface TransactionOutputWithPattern {
   value: number;
   n: number;
@@ -222,6 +230,7 @@ export interface TransactionOutputWithPattern {
   tokenData?: TokenData;
 }
 
+/** Transaction with bytecode patterns (v29.0.0+). */
 export interface TransactionWithPattern {
   txid: string;
   hash: string;
@@ -233,12 +242,12 @@ export interface TransactionWithPattern {
   fee?: number;
 }
 
-// Verbosity 4 response (includes byteCodePattern, v29.0.0+)
+/** Verbosity 4 response: includes byteCodePattern (v29.0.0+). */
 interface BlockResponseVerbosity4 extends BlockResponseBase {
   tx: TransactionWithPattern[];
 }
 
-// Verbosity = 4 - works for any block
+/** Verbosity 4: Block with bytecode patterns (v29.0.0+) - works for any block. */
 export interface GetBlockVerbosity4 extends GetBlockBase {
   params: [
     blockhash: string,
@@ -247,7 +256,7 @@ export interface GetBlockVerbosity4 extends GetBlockBase {
   response: BlockResponseVerbosity4 & { ablastate?: AblaState };
 }
 
-// Verbosity = 4 - for blocks before ABLA activation (May 2024)
+/** Verbosity 4: Block with bytecode patterns (v29.0.0+) - for blocks before ABLA activation (May 2024). */
 export interface GetBlockVerbosity4PreAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -256,7 +265,7 @@ export interface GetBlockVerbosity4PreAbla extends GetBlockBase {
   response: BlockResponseVerbosity4;
 }
 
-// Verbosity = 4 - for blocks after ABLA activation (May 2024)
+/** Verbosity 4: Block with bytecode patterns (v29.0.0+) - for blocks after ABLA activation (May 2024). */
 export interface GetBlockVerbosity4PostAbla extends GetBlockBase {
   params: [
     blockhash: string,
@@ -265,6 +274,7 @@ export interface GetBlockVerbosity4PostAbla extends GetBlockBase {
   response: BlockResponseVerbosity4 & { ablastate: AblaState };
 }
 
+/** Returns blockchain state, sync progress, and upcoming upgrade info. */
 export interface GetBlockchainInfo {
   method: 'getblockchaininfo';
   params: [];
@@ -297,12 +307,14 @@ export interface GetBlockchainInfo {
   }
 }
 
+/** Returns the current block height. */
 export interface GetBlockCount {
   method: 'getblockcount';
   params: [];
   response: number;
 }
 
+/** Returns block hash at given height. */
 export interface GetBlockHash {
   method: 'getblockhash';
   params: [
@@ -319,6 +331,7 @@ export interface GetBlockHeaderBase {
   ];
 }
 
+/** Verbosity 0: Returns hex-encoded block header. */
 export interface GetBlockHeaderVerbosity0 extends GetBlockHeaderBase {
   params: [
     hash_or_height: string| number,
@@ -327,7 +340,11 @@ export interface GetBlockHeaderVerbosity0 extends GetBlockHeaderBase {
   response: string;
 }
 
-// Base header response fields
+/**
+ * Base header response fields.
+ * @note `previousblockhash` not present on genesis block (height 0).
+ * @note `nextblockhash` not present on chain tip.
+ */
 interface HeaderResponseBase {
   hash: string;
   confirmations: number;
@@ -342,13 +359,11 @@ interface HeaderResponseBase {
   difficulty: number;
   chainwork: string;
   nTx: number;
-  // Not present on genesis block (height 0)
   previousblockhash: string;
-  // Not present on chain tip
   nextblockhash: string;
 }
 
-// Verbosity = 1 - works for any block
+/** Verbosity 1: Parsed header object - works for any block. */
 export interface GetBlockHeaderVerbosity1 extends GetBlockHeaderBase {
   params: [
     hash_or_height: string| number,
@@ -357,7 +372,7 @@ export interface GetBlockHeaderVerbosity1 extends GetBlockHeaderBase {
   response: HeaderResponseBase & { ablastate?: AblaState };
 }
 
-// Verbosity = 1 - for blocks before ABLA activation (May 2024)
+/** Verbosity 1: Parsed header object - for blocks before ABLA activation (May 2024). */
 export interface GetBlockHeaderVerbosity1PreAbla extends GetBlockHeaderBase {
   params: [
     hash_or_height: string| number,
@@ -366,7 +381,7 @@ export interface GetBlockHeaderVerbosity1PreAbla extends GetBlockHeaderBase {
   response: HeaderResponseBase;
 }
 
-// Verbosity = 1 - for blocks after ABLA activation (May 2024)
+/** Verbosity 1: Parsed header object - for blocks after ABLA activation (May 2024). */
 export interface GetBlockHeaderVerbosity1PostAbla extends GetBlockHeaderBase {
   params: [
     hash_or_height: string| number,
@@ -375,6 +390,7 @@ export interface GetBlockHeaderVerbosity1PostAbla extends GetBlockHeaderBase {
   response: HeaderResponseBase & { ablastate: AblaState };
 }
 
+/** Returns fee/size statistics for a block. */
 export interface GetBlockStats {
   method: 'getblockheader';
   params: [
@@ -414,9 +430,10 @@ export interface GetBlockStats {
     utxo_increase: number;
     utxo_size_inc: number;
   }
-  
+
 }
 
+/** Returns all known chain tips including forks. */
 export interface GetChainTips {
   method: 'getchaintips';
   params: [];
@@ -428,6 +445,7 @@ export interface GetChainTips {
   }[]
 }
 
+/** Returns transaction statistics over a block window. */
 export interface GetChainTxStats {
   method: 'getchaintxstats';
   params: [
@@ -445,6 +463,7 @@ export interface GetChainTxStats {
   }
 }
 
+/** Returns current network difficulty. */
 export interface GetDifficulty {
   method: 'getdifficulty';
   params: [];
@@ -460,7 +479,7 @@ interface GetDsProofBase {
   ];
 }
 
-// Verbosity = 0 (or false)
+/** Verbosity 0: Double-spend proof as hex. */
 export interface GetDsProofVerbosity0 extends GetDsProofBase {
   params: [
     dspid_or_txid_or_outpoint: string | { txid: string; vout: number },
@@ -474,7 +493,7 @@ export interface GetDsProofVerbosity0 extends GetDsProofBase {
   };
 }
 
-// Verbosity = 1
+/** Verbosity 1: Double-spend proof with descendants. */
 export interface GetDsProofVerbosity1 extends GetDsProofBase {
   params: [
     dspid_or_txid_or_outpoint: string | { txid: string; vout: number },
@@ -489,7 +508,7 @@ export interface GetDsProofVerbosity1 extends GetDsProofBase {
   };
 }
 
-// Verbosity = 2 (or true)
+/** Verbosity 2: Double-spend proof with parsed outpoint. */
 export interface GetDsProofVerbosity2 extends GetDsProofBase {
   params: [
     dspid_or_txid_or_outpoint: string | { txid: string; vout: number },
@@ -508,6 +527,7 @@ export interface GetDsProofVerbosity2 extends GetDsProofBase {
   };
 }
 
+/** Double-spend proof spender data. */
 interface Spender {
   txversion: number,
   sequence: number,
@@ -521,7 +541,7 @@ interface Spender {
   }
 }
 
-// Verbosity = 3
+/** Verbosity 3: Double-spend proof with full spender details. */
 export interface GetDsProofVerbosity3 extends GetDsProofVerbosity2 {
   response: {
     dspid: string;
@@ -544,7 +564,7 @@ export interface GetDsProofListBase {
   ];
 }
 
-// Verbosity = 0 (or false)
+/** Verbosity 0: List of double-spend proof IDs. */
 export interface GetDsProofListVerbosity0 extends GetDsProofListBase {
   params: [
     verbosity?: 0 | false,
@@ -553,7 +573,7 @@ export interface GetDsProofListVerbosity0 extends GetDsProofListBase {
   response: string[]
 }
 
-// Verbosity = 1
+/** Verbosity 1: List of double-spend proofs as hex with txid. */
 export interface GetDsProofListVerbosity1 extends GetDsProofListBase {
   params: [
     verbosity?: 1,
@@ -565,7 +585,7 @@ export interface GetDsProofListVerbosity1 extends GetDsProofListBase {
   }[]
 }
 
-// Verbosity = 2 (or true)
+/** Verbosity 2: List of double-spend proofs with parsed outpoints. */
 export interface GetDsProofListVerbosity2 extends GetDsProofListBase {
   params: [
     verbosity?: 2 | true,
@@ -581,7 +601,7 @@ export interface GetDsProofListVerbosity2 extends GetDsProofListBase {
   }[]
 }
 
-// Verbosity = 3
+/** Verbosity 3: List of double-spend proofs with full spender details. */
 export interface GetDsProofListVerbosity3 extends GetDsProofListBase {
   response: {
     dspid: string;
@@ -594,6 +614,7 @@ export interface GetDsProofListVerbosity3 extends GetDsProofListBase {
   }[]
 }
 
+/** Returns double-spend proof score for a transaction. */
 export interface GetDsProofScore {
   method: 'getdsproofscore';
   params: [
@@ -602,6 +623,7 @@ export interface GetDsProofScore {
   response: number;
 }
 
+/** Returns the hash of the last finalized block. */
 export interface GetFinalizedBlockHash {
   method: 'getfinalizedblockhash';
   params: [];
@@ -616,7 +638,7 @@ interface GetMempoolAncestorsBase {
   ];
 }
 
-// Verbosity 0 (false)
+/** Verbosity 0: Returns ancestor txids as array. */
 export interface GetMempoolAncestorsVerbosity0 extends GetMempoolAncestorsBase {
   params: [
     txid: string,
@@ -625,7 +647,7 @@ export interface GetMempoolAncestorsVerbosity0 extends GetMempoolAncestorsBase {
   response: string[];
 }
 
-// Verbosity 1 (true)
+/** Verbosity 1: Returns ancestor txids with detailed mempool info. */
 export interface GetMempoolAncestorsVerbosity1 extends GetMempoolAncestorsBase {
   params: [
     txid: string,
@@ -653,7 +675,7 @@ interface GetMempoolDescendantsBase {
   ];
 }
 
-// Verbosity 0 (false)
+/** Verbosity 0: Returns descendant txids as array. */
 export interface GetMempoolDescendantsVerbosity0 extends GetMempoolDescendantsBase {
   params: [
     txid: string,
@@ -662,7 +684,7 @@ export interface GetMempoolDescendantsVerbosity0 extends GetMempoolDescendantsBa
   response: string[];
 }
 
-// Verbosity 1 (true)
+/** Verbosity 1: Returns descendant txids with detailed mempool info. */
 export interface GetMempoolDescendantsVerbosity1 extends GetMempoolDescendantsBase {
   params: [
     txid: string,
@@ -682,6 +704,7 @@ export interface GetMempoolDescendantsVerbosity1 extends GetMempoolDescendantsBa
   };
 }
 
+/** Returns mempool entry for a specific transaction. */
 export interface GetMempoolEntry {
   method: 'getmempoolentry';
   params: [
@@ -699,6 +722,7 @@ export interface GetMempoolEntry {
   };
 }
 
+/** Returns mempool statistics and configuration. */
 export interface GetMempoolInfo {
   method: 'getmempoolinfo';
   params: [];
@@ -722,7 +746,7 @@ interface GetRawMempoolBase {
   ];
 }
 
-// Verbosity 0 (false)
+/** Verbosity 0: Returns all mempool txids as array. */
 export interface GetRawMempoolVerbosity0 extends GetRawMempoolBase {
   params: [
     verbose?: false | 0
@@ -730,7 +754,7 @@ export interface GetRawMempoolVerbosity0 extends GetRawMempoolBase {
   response: string[];
 }
 
-// Verbosity 1 (true)
+/** Verbosity 1: Returns all mempool txids with detailed info. */
 export interface GetRawMempoolVerbosity1 extends GetRawMempoolBase {
   params: [
     verbose?: true | 1
@@ -749,6 +773,7 @@ export interface GetRawMempoolVerbosity1 extends GetRawMempoolBase {
   };
 }
 
+/** Returns details about an unspent transaction output. */
 export interface GetTxOut {
   method: 'gettxout';
   params: [
@@ -771,6 +796,7 @@ export interface GetTxOut {
   }
 }
 
+/** Returns a merkle proof that transaction(s) are in a block. */
 export interface GetTxOutProof {
   method: 'gettxoutproof';
   params: [
@@ -780,7 +806,7 @@ export interface GetTxOutProof {
   response: string;
 }
 
-
+/** Returns UTXO set statistics. */
 export interface GetTxOutSetInfo {
   method: 'gettxoutsetinfo';
   params: [
@@ -800,6 +826,7 @@ export interface GetTxOutSetInfo {
   }
 }
 
+/** Permanently marks a block as invalid (cannot be part of best chain). */
 export interface InvalidateBlock {
   method: 'invalidateblock';
   params: [
@@ -808,6 +835,7 @@ export interface InvalidateBlock {
   response: null;
 }
 
+/** Marks a block as parked (temporarily invalid). */
 export interface ParkBlock {
   method: 'parkblock';
   params: [
@@ -816,6 +844,7 @@ export interface ParkBlock {
   response: null;
 }
 
+/** Treats a block as if it were received before others with same work. */
 export interface PreciousBlock {
   method: 'preciousblock';
   params: [
@@ -824,6 +853,7 @@ export interface PreciousBlock {
   response: null;
 }
 
+/** Prunes blockchain up to specified height. Returns height of last pruned block. */
 export interface PruneBlockchain {
   method: 'pruneblockchain';
   params: [
@@ -832,6 +862,7 @@ export interface PruneBlockchain {
   response: number;
 }
 
+/** Removes invalidity status from a block and its descendants. */
 export interface ReconsiderBlock {
   method: 'reconsiderblock';
   params: [
@@ -840,12 +871,14 @@ export interface ReconsiderBlock {
   response: null;
 }
 
+/** Saves mempool to disk. */
 export interface SaveMempool {
   method: 'savemempool';
   params: [];
   response: null;
 }
 
+/** Scans UTXO set for outputs matching descriptors. */
 export interface ScanTxOutSet {
   method: 'scantxoutset';
   params: [
@@ -871,6 +904,7 @@ export interface ScanTxOutSet {
   } | boolean;
 }
 
+/** Removes parked status from a block and its descendants. */
 export interface UnparkBlock {
   method: 'unparkblock';
   params: [
@@ -879,6 +913,7 @@ export interface UnparkBlock {
   response: null;
 }
 
+/** Verifies blockchain database. */
 export interface VerifyChain {
   method: 'verifychain';
   params: [
@@ -888,6 +923,7 @@ export interface VerifyChain {
   response: boolean;
 }
 
+/** Verifies a merkle proof and returns the txids it commits to. */
 export interface VerifyTxOutProof {
   method: 'verifytxoutproof';
   params: [

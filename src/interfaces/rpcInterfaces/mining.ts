@@ -1,6 +1,7 @@
 /* --- Mining Commands --- */
 // progress 9/9
 
+/** Returns a block template for mining. */
 export interface GetBlockTemplate {
   method: 'getblocktemplate';
   params: {
@@ -39,6 +40,7 @@ export interface GetBlockTemplate {
   }
 }
 
+/** Returns a lightweight block template (for mining pools). */
 export interface GetBlockTemplateLight {
   method: 'getblocktemplatelight';
   params: [
@@ -73,7 +75,7 @@ export interface GetBlockTemplateLight {
   };
 }
 
-
+/** Returns mining-related information. */
 export interface GetMiningInfo {
   method: 'getmininginfo';
   params: [];
@@ -90,6 +92,7 @@ export interface GetMiningInfo {
   }
 }
 
+/** Returns estimated network hash rate. */
 export interface GetNetworkHashps {
   method: 'getnetworkhashps';
   params: [
@@ -99,6 +102,7 @@ export interface GetNetworkHashps {
   response: number
 }
 
+/** Modifies a mempool transaction's priority. */
 export interface PrioritiseTransaction {
   method: 'prioritisetransaction';
   params: [
@@ -108,6 +112,7 @@ export interface PrioritiseTransaction {
   response: true
 }
 
+/** Submits a mined block to the network. */
 export interface SubmitBlock {
   method: 'submitblock';
   params: [
@@ -117,6 +122,7 @@ export interface SubmitBlock {
   response: {}
 }
 
+/** Submits a lightweight block (for mining pools). */
 export interface SubmitBlockLight {
   method: 'submitblocklight';
   params: [
@@ -126,6 +132,7 @@ export interface SubmitBlockLight {
   response: {}
 }
 
+/** Submits a block header for validation. */
 export interface SubmitHeader {
   method: 'submitheader';
   params: [
@@ -134,6 +141,7 @@ export interface SubmitHeader {
   response: {}
 }
 
+/** Validates a block template without mining. */
 export interface ValidateBlockTemplate {
   method: 'validateblocktemplate';
   params: [

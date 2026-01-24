@@ -1,6 +1,6 @@
 import type { Transaction } from "../interfaces.js";
 
-// ABLA state object (Adaptive Block Limit Algorithm, activated May 2024)
+/** Adaptive Block Limit Algorithm state (activated May 2024). */
 export interface AblaState {
   epsilon: number;
   beta: number;
@@ -9,7 +9,11 @@ export interface AblaState {
   nextblocksizelimit: number;
 }
 
-// Base block info fields
+/**
+ * Base block info fields shared across response types.
+ * @note `previousblockhash` not present on genesis block (height 0).
+ * @note `nextblockhash` not present on chain tip.
+ */
 interface BlockInfoBase {
   hash: string;
   confirmations: number;
@@ -25,47 +29,49 @@ interface BlockInfoBase {
   difficulty: number;
   chainwork: string;
   nTx: number;
-  // Not present on genesis block (height 0)
   previousblockhash: string;
-  // Not present on chain tip
   nextblockhash: string;
 }
 
-// Block info without tx details - works for any block
+/** Block info with tx IDs only - works for any block. */
 export interface BlockInfoNoTxDetails extends BlockInfoBase {
   tx: string[];
   ablastate?: AblaState;
 }
 
-// Block info without tx details - for blocks before ABLA activation (May 2024)
+/** Block info with tx IDs only - for blocks before ABLA activation (May 2024). */
 export interface BlockInfoNoTxDetailsPreAbla extends BlockInfoBase {
   tx: string[];
 }
 
-// Block info without tx details - for blocks after ABLA activation (May 2024)
+/** Block info with tx IDs only - for blocks after ABLA activation (May 2024). */
 export interface BlockInfoNoTxDetailsPostAbla extends BlockInfoBase {
   tx: string[];
   ablastate: AblaState;
 }
 
-// Block info with tx details - works for any block
+/** Block info with full transaction objects - works for any block. */
 export interface BlockInfoTxDetails extends BlockInfoBase {
   tx: Transaction[];
   ablastate?: AblaState;
 }
 
-// Block info with tx details - for blocks before ABLA activation (May 2024)
+/** Block info with full transaction objects - for blocks before ABLA activation (May 2024). */
 export interface BlockInfoTxDetailsPreAbla extends BlockInfoBase {
   tx: Transaction[];
 }
 
-// Block info with tx details - for blocks after ABLA activation (May 2024)
+/** Block info with full transaction objects - for blocks after ABLA activation (May 2024). */
 export interface BlockInfoTxDetailsPostAbla extends BlockInfoBase {
   tx: Transaction[];
   ablastate: AblaState;
 }
 
-// Base header info fields
+/**
+ * Base header info fields shared across response types.
+ * @note `previousblockhash` not present on genesis block (height 0).
+ * @note `nextblockhash` not present on chain tip.
+ */
 interface HeaderInfoBase {
   hash: string;
   confirmations: number;
@@ -80,25 +86,24 @@ interface HeaderInfoBase {
   difficulty: number;
   chainwork: string;
   nTx: number;
-  // Not present on genesis block (height 0)
   previousblockhash: string;
-  // Not present on chain tip
   nextblockhash: string;
 }
 
-// Header info - works for any block
+/** Block header info - works for any block. */
 export interface HeaderInfo extends HeaderInfoBase {
   ablastate?: AblaState;
 }
 
-// Header info - for blocks before ABLA activation (May 2024)
+/** Block header info - for blocks before ABLA activation (May 2024). */
 export interface HeaderInfoPreAbla extends HeaderInfoBase {}
 
-// Header info - for blocks after ABLA activation (May 2024)
+/** Block header info - for blocks after ABLA activation (May 2024). */
 export interface HeaderInfoPostAbla extends HeaderInfoBase {
   ablastate: AblaState;
 }
 
+/** Current blockchain state and synchronization status. */
 export interface ChainInfo {
   chain: 'main' | 'test' | 'regtest';
   blocks: number;
@@ -114,6 +119,7 @@ export interface ChainInfo {
   warnings: string;
 }
 
+/** UTXO set query result with bitmap for checked outpoints. */
 export interface UtxosInfo {
   chaintipHash: string;
   chainHeight: number;
@@ -132,6 +138,7 @@ export interface UtxosInfo {
   bitmap: string;
 }
 
+/** Mempool configuration and size statistics. */
 export interface MempoolInfo {
   loaded: boolean;
   size: number;
@@ -144,6 +151,7 @@ export interface MempoolInfo {
   maxdatacarriersize: number;
 }
 
+/** Mempool contents indexed by txid with fee and dependency info. */
 export interface MempoolContent {
   [txid: string]: {
     fees: {
@@ -157,17 +165,19 @@ export interface MempoolContent {
   }
 }
 
+/** Transaction with block hash (for confirmed transactions). */
 export interface TxDetails extends Transaction {
   blockhash: string;
 }
 
-// Pattern types for v29.0.0+ REST endpoints
+/** Script fingerprint and pattern info for bytecode analysis (v29.0.0+). */
 export interface ByteCodePattern {
   fingerprint: string;
   pattern: string;
   patternArgsInfo?: string[];
 }
 
+/** Script with optional bytecode pattern metadata (v29.0.0+). */
 export interface ScriptPubKeyWithPattern {
   asm: string;
   hex: string;
@@ -176,6 +186,7 @@ export interface ScriptPubKeyWithPattern {
   byteCodePattern?: ByteCodePattern;
 }
 
+/** Transaction input with prevout and pattern info (v29.0.0+). */
 export interface TransactionInputWithPattern {
   txid: string;
   vout: number;
@@ -199,12 +210,14 @@ export interface TransactionInputWithPattern {
   };
 }
 
+/** Transaction output with pattern-enabled scriptPubKey (v29.0.0+). */
 export interface TransactionOutputWithPattern {
   value: number;
   n: number;
   scriptPubKey: ScriptPubKeyWithPattern;
 }
 
+/** Transaction with bytecode patterns and optional fee (v29.0.0+). */
 export interface TxDetailsWithPatterns {
   txid: string;
   hash: string;
@@ -217,6 +230,7 @@ export interface TxDetailsWithPatterns {
   fee?: number;
 }
 
+/** Block with pattern-enhanced transactions (v29.0.0+). */
 export interface BlockInfoWithPatterns extends Omit<BlockInfoNoTxDetails, 'tx'> {
   tx: TxDetailsWithPatterns[];
 }

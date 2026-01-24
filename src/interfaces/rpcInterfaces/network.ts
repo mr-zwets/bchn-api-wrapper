@@ -1,6 +1,7 @@
 /* --- Network Commands --- */
 // progress 14/14
 
+/** Adds or removes a node from the addnode list. */
 export interface AddNode {
   method: 'addnode';
   params: [
@@ -10,6 +11,7 @@ export interface AddNode {
   response: null;
 }
 
+/** Clears all banned IPs. */
 export interface ClearBanned {
   method: 'clearbanned';
   params: [
@@ -19,6 +21,7 @@ export interface ClearBanned {
   response: null;
 }
 
+/** Disconnects a node by address or node ID. */
 export interface DisconnectNode {
   method: 'disconnectnode';
   params: [
@@ -28,6 +31,7 @@ export interface DisconnectNode {
   response: null;
 }
 
+/** Returns info about manually added nodes. */
 export interface GetAddedNodeInfo {
   method: 'getaddednodeinfo';
   params: [
@@ -43,18 +47,21 @@ export interface GetAddedNodeInfo {
   }[];
 }
 
+/** Returns the number of connections to other nodes. */
 export interface GetConnectionCount {
   method: 'getconnectioncount';
   params: [];
   response: number
 }
 
+/** Returns the excessive block size setting. */
 export interface GetExcessiveBlock {
   method: 'getexcessiveblock';
   params: [];
   response: number;
 }
 
+/** Returns network traffic statistics. */
 export interface GetNetTotals {
   method: 'getnettotals';
   params: [];
@@ -73,6 +80,7 @@ export interface GetNetTotals {
   };
 }
 
+/** Returns network configuration and status. */
 export interface GetNetworkInfo {
   method: 'getnetworkinfo';
   params: [];
@@ -105,6 +113,7 @@ export interface GetNetworkInfo {
   }
 }
 
+/** Returns known peer addresses from the address manager. */
 export interface GetNodeAddresses {
   method: 'getnodeaddresses';
   params: [
@@ -118,6 +127,7 @@ export interface GetNodeAddresses {
   }[];
 }
 
+/** Returns detailed info about each connected peer. */
 export interface GetPeerInfo {
   method: 'getpeerinfo';
   params: [];
@@ -162,6 +172,7 @@ export interface GetPeerInfo {
   }[];
 }
 
+/** Returns list of banned IPs/subnets. */
 export interface ListBanned {
   method: 'listbanned';
   params: [];
@@ -173,12 +184,14 @@ export interface ListBanned {
   }[];
 }
 
+/** Pings all connected nodes to measure latency. */
 export interface Ping {
   method: 'ping';
   params: [];
   response: null;
 }
 
+/** Bans or unbans a node by subnet. */
 export interface SetBan {
   method: 'setban';
   params: [
@@ -190,6 +203,7 @@ export interface SetBan {
   response: null;
 }
 
+/** Enables or disables all P2P network activity. */
 export interface SetNetworkActive {
   method: 'setnetworkactive';
   params: [

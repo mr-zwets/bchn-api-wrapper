@@ -1,6 +1,7 @@
 /* --- Util Commands --- */
 // progress 5/5
 
+/** Creates a multisig address (without adding to wallet). */
 export interface CreateMultisig {
   method: 'createmultisig';
   params: [
@@ -13,22 +14,24 @@ export interface CreateMultisig {
   };
 }
 
+/** Returns estimated fee rate in BCH/kB. */
 export interface EstimateFee {
   method: 'estimatefee';
   params: [];
   response: number;
 }
 
-
+/** Signs a message with a private key (returns base64 signature). */
 export interface SignMessageWithPrivKey {
   method: 'signmessagewithprivkey';
   params: [
     privkey: string,
     message: string
   ];
-  response: string; // The signature of the message encoded in base 64
+  response: string;
 }
 
+/** Validates a Bitcoin Cash address. */
 export interface ValidateAddress {
   method: 'validateaddress';
   params: [string];
@@ -41,6 +44,7 @@ export interface ValidateAddress {
   };
 }
 
+/** Verifies a signed message. */
 export interface VerifyMessage {
   method: 'verifymessage';
   params: [

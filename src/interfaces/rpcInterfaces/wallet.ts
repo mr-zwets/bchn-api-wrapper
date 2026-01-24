@@ -3,6 +3,7 @@
 
 import type { TokenData } from "../interfaces.js";
 
+/** Marks an in-wallet transaction as abandoned (only works on unconfirmed tx). */
 export interface AbandonTransaction {
   method: 'abandontransaction';
   params: [
@@ -11,12 +12,14 @@ export interface AbandonTransaction {
   response: null;
 }
 
+/** Stops current wallet rescan. */
 export interface AbortRescan {
   method: 'abortrescan';
   params: [];
   response: null;
 }
 
+/** Adds a multisig address to the wallet. */
 export interface AddMultisigAddress {
   method: 'addmultisigaddress';
   params: [
@@ -30,6 +33,7 @@ export interface AddMultisigAddress {
   };
 }
 
+/** Backs up wallet to specified file. */
 export interface BackupWallet {
   method: 'backupwallet';
   params: [
@@ -38,6 +42,7 @@ export interface BackupWallet {
   response: null;
 }
 
+/** Creates a new wallet. */
 export interface CreateWallet {
   method: 'createwallet';
   params: [
@@ -51,6 +56,7 @@ export interface CreateWallet {
   };
 }
 
+/** Dumps all wallet keys to a file. */
 export interface DumpWallet {
   method: 'dumpwallet';
   params: [
@@ -61,6 +67,7 @@ export interface DumpWallet {
   };
 }
 
+/** Returns private key for an address. */
 export interface DumpPrivKey {
   method: 'dumpprivkey';
   params: [
@@ -69,6 +76,7 @@ export interface DumpPrivKey {
   response: string;
 }
 
+/** Encrypts wallet with passphrase (requires restart). */
 export interface EncryptWallet {
   method: 'encryptwallet';
   params: [
@@ -77,6 +85,7 @@ export interface EncryptWallet {
   response: string;
 }
 
+/** Returns addresses assigned to a label. */
 export interface GetAddressesByLabel {
   method: 'getaddressesbylabel';
   params: [
@@ -89,6 +98,7 @@ export interface GetAddressesByLabel {
   };
 }
 
+/** Returns detailed information about an address. */
 export interface GetAddressInfo {
   method: 'getaddressinfo';
   params: [string];
@@ -118,6 +128,7 @@ export interface GetAddressInfo {
   };
 }
 
+/** Returns wallet balance. */
 export interface GetBalance {
   method: 'getbalance';
   params: [
@@ -128,6 +139,7 @@ export interface GetBalance {
   response: number;
 }
 
+/** Generates a new address for receiving payments. */
 export interface GetNewAddress {
   method: 'getnewaddress';
   params: [
@@ -136,12 +148,14 @@ export interface GetNewAddress {
   response: string;
 }
 
+/** Returns a new address for receiving change. */
 export interface GetRawChangeAddress {
   method: 'getrawchangeaddress';
   params: [];
   response: string;
 }
 
+/** Returns total amount received by an address. */
 export interface GetReceivedByAddress {
   method: 'getreceivedbyaddress';
   params: [
@@ -151,6 +165,7 @@ export interface GetReceivedByAddress {
   response: number;
 }
 
+/** Returns total amount received by addresses with a label. */
 export interface GetReceivedByLabel {
   method: 'getreceivedbylabel';
   params: [
@@ -160,6 +175,7 @@ export interface GetReceivedByLabel {
   response: number;
 }
 
+/** Returns detailed information about an in-wallet transaction. */
 export interface GetTransaction {
   method: 'gettransaction';
   params: [
@@ -190,12 +206,14 @@ export interface GetTransaction {
   };
 }
 
+/** Returns unconfirmed balance. */
 export interface GetUnconfirmedBalance {
   method: 'getunconfirmedbalance';
   params: [];
   response: number;
 }
 
+/** Returns wallet state info. */
 export interface GetWalletInfo {
   method: 'getwalletinfo';
   params: [];
@@ -217,6 +235,7 @@ export interface GetWalletInfo {
   }
 }
 
+/** Imports an address or script for watching (without private key). */
 export interface ImportAddress {
   method: 'importaddress';
   params: [
@@ -228,6 +247,7 @@ export interface ImportAddress {
   response: number;
 }
 
+/** Imports multiple addresses/scripts/keys. */
 export interface ImportMulti {
   method: 'importmulti';
   params: [
@@ -254,6 +274,7 @@ export interface ImportMulti {
   }[];
 }
 
+/** Imports a private key. */
 export interface ImportPrivKey {
   method: 'importprivkey';
   params: [
@@ -264,6 +285,7 @@ export interface ImportPrivKey {
   response: null;
 }
 
+/** Imports funds without rescan (requires merkle proof). */
 export interface ImportPrunedFunds {
   method: 'importprunedfunds';
   params: [
@@ -273,6 +295,7 @@ export interface ImportPrunedFunds {
   response: null;
 }
 
+/** Imports a public key for watching. */
 export interface ImportPubKey {
   method: 'importpubkey';
   params: [
@@ -283,6 +306,7 @@ export interface ImportPubKey {
   response: null;
 }
 
+/** Imports keys from a wallet dump file. */
 export interface ImportWallet {
   method: 'importwallet';
   params: [
@@ -291,6 +315,7 @@ export interface ImportWallet {
   response: null;
 }
 
+/** Refills the keypool. */
 export interface KeyPoolRefill {
   method: 'keypoolrefill';
   params: [
@@ -299,6 +324,7 @@ export interface KeyPoolRefill {
   response: null;
 }
 
+/** Returns addresses grouped by common ownership. */
 export interface ListAddressGroupings {
   method: 'listaddressgroupings';
   params: [];
@@ -313,6 +339,7 @@ export interface ListAddressGroupings {
   ];
 }
 
+/** Returns all labels in the wallet. */
 export interface ListLabels {
   method: 'listlabels';
   params: [
@@ -321,6 +348,7 @@ export interface ListLabels {
   response: string[];
 }
 
+/** Returns list of locked unspent outputs. */
 export interface ListLockUnspent {
   method: 'listlockunspent';
   params: [];
@@ -330,6 +358,7 @@ export interface ListLockUnspent {
   }[];
 }
 
+/** Lists transactions received by address. */
 export interface ListReceivedByAddress {
   method: 'listreceivedbyaddress';
   params: [
@@ -348,6 +377,7 @@ export interface ListReceivedByAddress {
   }[];
 }
 
+/** Lists transactions received by label. */
 export interface ListReceivedByLabel {
   method: 'listreceivedbylabel';
   params: [
@@ -363,6 +393,7 @@ export interface ListReceivedByLabel {
   }[];
 }
 
+/** Wallet transaction representation. */
 interface TransactionWallet {
   address?: string;
   category: 'send' | 'receive';
@@ -382,6 +413,7 @@ interface TransactionWallet {
   to?: string;
 }
 
+/** Returns transactions since a block. */
 export interface ListSinceBlock {
   method: 'listsinceblock';
   params: [
@@ -397,6 +429,7 @@ export interface ListSinceBlock {
   };
 }
 
+/** Returns recent transactions for the wallet. */
 export interface ListTransactions {
   method: 'listtransactions';
   params: [
@@ -408,6 +441,7 @@ export interface ListTransactions {
   response: TransactionWallet[];
 }
 
+/** Returns unspent outputs in the wallet. */
 export interface ListUnspent {
   method: 'listunspent';
   params: [
@@ -427,6 +461,7 @@ export interface ListUnspent {
   response: ListUnspentItem[];
 }
 
+/** Single UTXO from listunspent. */
 export interface ListUnspentItem {
   txid: string;
   vout: number;
@@ -442,6 +477,7 @@ export interface ListUnspentItem {
   safe: boolean;
 }
 
+/** Returns list of available wallets. */
 export interface ListWalletDir {
   method: 'listwalletdir';
   params: [];
@@ -452,12 +488,14 @@ export interface ListWalletDir {
   };
 }
 
+/** Returns list of loaded wallets. */
 export interface ListWallets {
   method: 'importaddress';
   params: [];
   response: string[];
 }
 
+/** Loads a wallet from file. */
 export interface LoadWallet {
   method: 'loadwallet';
   params: [
@@ -469,6 +507,7 @@ export interface LoadWallet {
   };
 }
 
+/** Locks or unlocks unspent outputs. */
 export interface LockUnspent {
   method: 'lockunspent';
   params: [
@@ -481,6 +520,7 @@ export interface LockUnspent {
   response: boolean;
 }
 
+/** Removes imported pruned funds from wallet. */
 export interface RemovePrunedFunds {
   method: 'removeprunedfunds';
   params: [
@@ -489,6 +529,7 @@ export interface RemovePrunedFunds {
   response: null;
 }
 
+/** Rescans blockchain for wallet transactions. */
 export interface RescanBlockchain {
   method: 'rescanblockchain';
   params: [
@@ -501,6 +542,7 @@ export interface RescanBlockchain {
   };
 }
 
+/** Sends to multiple recipients. */
 export interface SendMany {
   method: 'sendmany';
   params: [
@@ -517,6 +559,7 @@ export interface SendMany {
   response: string;
 }
 
+/** Sends to a single address. */
 export interface SendToAddress {
   method: 'sendtoaddress';
   params: [
@@ -531,6 +574,7 @@ export interface SendToAddress {
   response: string;
 }
 
+/** Sets the HD seed for the wallet. */
 export interface SetHdSeed {
   method: 'sethdseed';
   params: [
@@ -540,6 +584,7 @@ export interface SetHdSeed {
   response: null;
 }
 
+/** Sets the label for an address. */
 export interface SetLabel {
   method: 'setlabel';
   params: [
@@ -549,6 +594,7 @@ export interface SetLabel {
   response: null;
 }
 
+/** Sets the transaction fee per kB. */
 export interface SetTxFee {
   method: 'settxfee';
   params: [
@@ -557,6 +603,7 @@ export interface SetTxFee {
   response: boolean;
 }
 
+/** Signs a message with an address's private key. */
 export interface SignMessage {
   method: 'signmessage';
   params: [
@@ -566,6 +613,7 @@ export interface SignMessage {
   response: string;
 }
 
+/** Signs a raw transaction with wallet keys. */
 export interface SignRawTransactionWithWallet {
   method: 'signrawtransactionwithwallet';
   params: [
@@ -593,6 +641,7 @@ export interface SignRawTransactionWithWallet {
   };
 }
 
+/** Unloads a wallet. */
 export interface UnloadWallet {
   method: 'unloadwallet';
   params: [
@@ -601,6 +650,7 @@ export interface UnloadWallet {
   response: null;
 }
 
+/** Creates and funds a PSBT. */
 export interface WalletCreateFundedPsbt {
   method: 'walletcreatefundedpsbt';
   params: [
@@ -635,12 +685,14 @@ export interface WalletCreateFundedPsbt {
   };
 }
 
+/** Locks the encrypted wallet. */
 export interface WalletLock {
   method: 'walletlock';
   params: [];
   response: null;
 }
 
+/** Unlocks the wallet for a specified time. */
 export interface WalletPassphrase {
   method: 'walletpassphrase';
   params: [
@@ -650,6 +702,7 @@ export interface WalletPassphrase {
   response: null;
 }
 
+/** Changes the wallet passphrase. */
 export interface WalletPassphraseChange {
   method: 'walletpassphrasechange';
   params: [
@@ -659,6 +712,7 @@ export interface WalletPassphraseChange {
   response: null;
 }
 
+/** Processes a PSBT with wallet data. */
 export interface WalletProcessPsbt {
   method: 'walletprocesspsbt';
   params: [

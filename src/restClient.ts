@@ -2,11 +2,13 @@ import type { RestClientConfig, formatOptions, ResponseType } from "./interfaces
 import type {
   BlockInfoNoTxDetails,
   BlockInfoTxDetails,
+  BlockInfoWithPatterns,
   ChainInfo,
   HeaderInfo,
   MempoolContent,
   MempoolInfo,
   TxDetails,
+  TxDetailsWithPatterns,
   UtxosInfo
 } from "./interfaces/restInterfaces/interfaces.js";
 import { validateUrl } from "./utils/utils.js";
@@ -115,5 +117,15 @@ export class BchnRestClient {
   // Get mempool contents (transactions currently in the mempool)
   async getMempoolContents() {
     return this.fetchFromNode<MempoolContent, 'json'>('mempool/contents.json', 'json');
+  }
+
+  // Get block with pattern data (v29.0.0+)
+  async getBlockWithPatterns(blockhash: string) {
+    return this.fetchFromNode<BlockInfoWithPatterns, 'json'>(`block/withpatterns/${blockhash}.json`, 'json');
+  }
+
+  // Get transaction with pattern data (v29.0.0+)
+  async getTransactionWithPatterns(txid: string) {
+    return this.fetchFromNode<TxDetailsWithPatterns, 'json'>(`tx/withpatterns/${txid}.json`, 'json');
   }
 }

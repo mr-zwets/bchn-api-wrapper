@@ -1,6 +1,10 @@
-# BCHN-API-Wrapper 
+# BCHN-API-Wrapper
 
-This library is a Typescript wrapper for interacting with the Bitcoin Cash Node (BCHN) RPC and REST interfaces. 
+This library is a Typescript wrapper for interacting with the Bitcoin Cash Node (BCHN) RPC and REST interfaces.
+
+## Compatibility
+
+RPC and REST interface types compatible with **BCHN v29.0.0**.
 
 ## Features
 
@@ -16,7 +20,7 @@ The `BchnRestClient` uses a class with unique methods for each of the endpoints.
 
 The `BchnRpcClient` uses a request function which uses generics to type arguments and responses.
 
-The **REST API** is ideal for **read-only** access to general blockchain information such as transactions, blocks, and UTXO data. In contrast, the **RPC API** allows for **full interaction** with the Bitcoin Cash node, including managing the built-in wallet, sending transactions, performing mining operations, and issuing control commands like pruning or stopping the node. While the REST API provides 9 endpoints, the RPC API offers a much broader set of 136 commands.
+The **REST API** is ideal for **read-only** access to general blockchain information such as transactions, blocks, and UTXO data. In contrast, the **RPC API** allows for **full interaction** with the Bitcoin Cash node, including managing the built-in wallet, sending transactions, performing mining operations, and issuing control commands like pruning or stopping the node. While the REST API provides 11 endpoints, the RPC API offers a much broader set of 136 commands.
 
 ## Configuration
 
@@ -57,7 +61,7 @@ yarn add @mr-zwets/bchn-api-wrapper
 
 ## REST usage
 
-The `BchnRestClient` is a wrapper over the 9 BCHN REST-endpoints. For the list of the BCHN REST-endpoints see the [REST documentation](https://docs.bitcoincashnode.org/doc/REST-interface/).
+The `BchnRestClient` is a wrapper over the 11 BCHN REST-endpoints. For the list of the BCHN REST-endpoints see the [REST documentation](https://docs.bitcoincashnode.org/doc/REST-interface/).
 
 The `RestClientConfig` object accepts optional parameters for `logger` & `timeoutMs`
 

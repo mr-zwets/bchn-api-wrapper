@@ -84,6 +84,8 @@ export interface GetNetworkInfo {
     localrelay: boolean;
     timeoffset: number;
     connections: number;
+    connections_in: number;
+    connections_out: number;
     networkactive: boolean;
     networks: {
       name: string;
@@ -149,6 +151,8 @@ export interface GetPeerInfo {
     addr_rate_limited: number;
     whitelisted: boolean;
     minfeefilter: number;
+    bip152_hb_to: boolean;
+    bip152_hb_from: boolean;
     bytessent_per_msg: {
       [msg: string]: number;
     };

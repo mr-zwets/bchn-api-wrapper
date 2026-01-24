@@ -97,6 +97,8 @@ export interface MempoolInfo {
   maxmempool: number;
   mempoolminfee: number;
   minrelaytxfee: number;
+  permitbaremultisig: boolean;
+  maxdatacarriersize: number;
 }
 
 export interface MempoolContent {
@@ -114,4 +116,64 @@ export interface MempoolContent {
 
 export interface TxDetails extends Transaction {
   blockhash: string;
+}
+
+// Pattern types for v29.0.0+ REST endpoints
+export interface ByteCodePattern {
+  fingerprint: string;
+  pattern: string;
+  patternArgsInfo?: string[];
+}
+
+export interface ScriptPubKeyWithPattern {
+  asm: string;
+  hex: string;
+  type: string;
+  address?: string;
+  byteCodePattern?: ByteCodePattern;
+}
+
+export interface TransactionInputWithPattern {
+  txid: string;
+  vout: number;
+  scriptSig: {
+    asm: string;
+    hex: string;
+  };
+  sequence: number;
+  prevout?: {
+    generated: boolean;
+    height: number;
+    value: number;
+    scriptPubKey: ScriptPubKeyWithPattern;
+  };
+  redeemScript?: {
+    asm: string;
+    hex: string;
+    type: string;
+    byteCodePattern?: ByteCodePattern;
+    p2shType?: string;
+  };
+}
+
+export interface TransactionOutputWithPattern {
+  value: number;
+  n: number;
+  scriptPubKey: ScriptPubKeyWithPattern;
+}
+
+export interface TxDetailsWithPatterns {
+  txid: string;
+  hash: string;
+  size: number;
+  version: number;
+  locktime: number;
+  vin: TransactionInputWithPattern[];
+  vout: TransactionOutputWithPattern[];
+  blockhash: string;
+  fee?: number;
+}
+
+export interface BlockInfoWithPatterns extends Omit<BlockInfoNoTxDetails, 'tx'> {
+  tx: TxDetailsWithPatterns[];
 }

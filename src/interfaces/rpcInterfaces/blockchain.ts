@@ -158,6 +158,90 @@ export interface GetBlockVerbosity3 extends GetBlockBase {
   };
 }
 
+// ByteCodePattern for script pattern recognition (v29.0.0+)
+export interface ByteCodePattern {
+  fingerprint: string;
+  pattern: string;
+  patternArgsInfo?: string[];
+}
+
+export interface ScriptPubKeyWithPattern {
+  asm: string;
+  hex: string;
+  type: 'nonstandard' | 'pubkey' | 'pubkeyhash' | 'scripthash' | 'multisig' | 'nulldata';
+  address?: string;
+  byteCodePattern?: ByteCodePattern;
+}
+
+export interface TransactionInputWithPattern extends TransactionInput {
+  prevout?: {
+    generated: boolean;
+    height: number;
+    value: number;
+    scriptPubKey: ScriptPubKeyWithPattern;
+    tokenData?: TokenData;
+  };
+  redeemScript?: {
+    asm: string;
+    hex: string;
+    type: string;
+    byteCodePattern?: ByteCodePattern;
+    p2shType?: string;
+  };
+}
+
+export interface TransactionOutputWithPattern {
+  value: number;
+  n: number;
+  scriptPubKey: ScriptPubKeyWithPattern;
+  tokenData?: TokenData;
+}
+
+export interface TransactionWithPattern {
+  txid: string;
+  hash: string;
+  size: number;
+  version: number;
+  locktime: number;
+  vin: TransactionInputWithPattern[];
+  vout: TransactionOutputWithPattern[];
+  fee?: number;
+}
+
+// Verbosity = 4 (includes byteCodePattern)
+export interface GetBlockVerbosity4 extends GetBlockBase {
+  params: [
+    blockhash: string,
+    verbosity: 4
+  ];
+  response: {
+    hash: string;
+    confirmations: number;
+    size: number;
+    height: number;
+    version: number;
+    versionHex: string;
+    merkleroot: string;
+    tx: TransactionWithPattern[];
+    time: number;
+    mediantime: number;
+    nonce: number;
+    bits: string;
+    difficulty: number;
+    chainwork: string;
+    nTx: number;
+    previousblockhash: string;
+    nextblockhash: string;
+    ablastate?: {
+      epsilon: number;
+      beta: number;
+      blocksize: number;
+      blocksizelimit: number;
+      nextblocksizelimit: number;
+    };
+  };
+}
+
 export interface GetBlockchainInfo {
   method: 'getblockchaininfo';
   params: [];
@@ -177,6 +261,12 @@ export interface GetBlockchainInfo {
     automatic_pruning: boolean;
     prune_target_size?: number;
     warnings: string;
+    upgrade_status: {
+      name: string;
+      description: string;
+      activation_time: number;
+      is_activated: boolean;
+    };
   }
 }
 
@@ -576,6 +666,8 @@ export interface GetMempoolInfo {
     maxmempool: number;
     mempoolminfee: number;
     minrelaytxfee: number;
+    permitbaremultisig: boolean;
+    maxdatacarriersize: number;
   }
 }
 
@@ -648,7 +740,9 @@ export interface GetTxOutProof {
 export interface GetTxOutSetInfo {
   method: 'gettxoutsetinfo';
   params: [
-    txid: string
+    hash_type?: 'hash_serialized_3' | 'ecmh' | 'muhash',
+    hash_or_height?: string | number,
+    use_index?: boolean
   ];
   response: {
     height: number;
@@ -656,7 +750,7 @@ export interface GetTxOutSetInfo {
     transactions: number;
     txouts: number;
     bogosize: number;
-    hash_serialized: string;
+    hash_serialized_3: string;
     disk_size: number;
     total_amount: number;
   }

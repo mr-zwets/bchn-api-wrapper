@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "target": "ES6",
     "strict": true,
+    "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
     "types": ["vitest/globals", "node"],

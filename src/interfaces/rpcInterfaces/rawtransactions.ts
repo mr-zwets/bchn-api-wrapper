@@ -5,7 +5,7 @@ import  type { TokenData, Transaction, TransactionInput, TransactionOutput } fro
 
 /** Combines multiple PSBTs into one. */
 export interface CombinePsbt {
-  method: 'decoderawtransaction';
+  method: 'combinepsbt';
   params: [
     txs: string[]
   ];

@@ -15,6 +15,18 @@ describe('BchnRpcClient should have the correct constructor arguments', () => {
     expect(client).toBeInstanceOf(BchnRpcClient);
   });
 
+  it('should create an instance from protocol, host and port', async () => {
+    const config = {
+      protocol: 'http',
+      host: 'localhost',
+      port: 8332,
+      rpcUser: testRpcUser,
+      rpcPassword: testRpcPassword
+    } as const
+    const client = new BchnRpcClient(config);
+    await expect(client.request<GetBlockCount>("getblockcount")).resolves.toEqual({});
+  });
+
   it('should throw an error for an invalid URL', () => {
     const config = {
       url: 'invalid-url',

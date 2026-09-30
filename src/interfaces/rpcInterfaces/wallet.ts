@@ -490,7 +490,7 @@ export interface ListWalletDir {
 
 /** Returns list of loaded wallets. */
 export interface ListWallets {
-  method: 'importaddress';
+  method: 'listwallets';
   params: [];
   response: string[];
 }

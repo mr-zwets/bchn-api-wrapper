@@ -279,7 +279,7 @@ export interface GetBlockchainInfo {
   method: 'getblockchaininfo';
   params: [];
   response: {
-    chain: 'main' | 'test' | 'regtest';
+    chain: 'main' | 'test' | 'test4' | 'scale' | 'chip' | 'regtest';
     blocks: number;
     headers: number;
     bestblockhash: string;
@@ -290,18 +290,20 @@ export interface GetBlockchainInfo {
     chainwork: string;
     size_on_disk: number;
     pruned: boolean;
-    pruneheight: number;
-    automatic_pruning: boolean;
+    /** Only present when pruned. */
+    pruneheight?: number;
+    automatic_pruning?: boolean;
     prune_target_size?: number;
     warnings: string;
     upgrade_status: {
       name: string;
       mempool_activated: boolean;
       mempool_activation_mtp: number;
-      block_preactivation_height: number;
-      block_preactivation_hash: string;
-      block_postactivation_height: number;
-      block_postactivation_hash: string;
+      /** null until the upgrade activates. */
+      block_preactivation_height: number | null;
+      block_preactivation_hash: string | null;
+      block_postactivation_height: number | null;
+      block_postactivation_hash: string | null;
       software_expiration_time: number;
     };
   }
@@ -441,7 +443,7 @@ export interface GetChainTips {
     height: number
     hash: string
     branchlen:number
-    status: 'active' | 'parked' | 'headers-only' | 'valid-headers' | 'valid-fork' | 'active'
+    status: 'active' | 'invalid' | 'parked' | 'headers-only' | 'valid-headers' | 'valid-fork'
   }[]
 }
 
@@ -627,6 +629,7 @@ export interface GetDsProofScore {
 export interface GetFinalizedBlockHash {
   method: 'getfinalizedblockhash';
   params: [];
+  /** Empty string when no block is finalized yet. */
   response: string;
 }
 
@@ -736,6 +739,7 @@ export interface GetMempoolInfo {
     minrelaytxfee: number;
     permitbaremultisig: boolean;
     maxdatacarriersize: number;
+    total_fee: number;
   }
 }
 

@@ -43,7 +43,7 @@ function isUrlConfig(config: RpcClientConfig): config is RpcClientUrlConfig {
 
 // Type guard to check if the config is RpcClientHostConfig
 function isHostConfig(config: RpcClientConfig): config is RpcClientHostConfig {
-  return 'protocol' in config && 'hostname' in config && 'port' in config;
+  return 'protocol' in config && 'host' in config && 'port' in config;
 }
 
 export enum BchnNetworkPort {

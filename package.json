@@ -1,6 +1,6 @@
 {
   "name": "@mr-zwets/bchn-api-wrapper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a Typescript wrapper for interacting with the Bitcoin Cash Node (BCHN) API ",
   "type": "module",
   "files": [

@@ -797,7 +797,7 @@ export interface GetTxOut {
     }
     tokenData?: TokenData;
     coinbase: boolean;
-  }
+  } | null; // null when the output is spent or unknown (with include_mempool, also when spent in the mempool)
 }
 
 /** Returns a merkle proof that transaction(s) are in a block. */
@@ -893,6 +893,8 @@ export interface ScanTxOutSet {
     }>
   ];
   response: {
+    success: boolean;
+    searched_items: number;
     unspents: Array<{
       txid: string;
       vout: number;

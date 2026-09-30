@@ -394,7 +394,7 @@ export interface GetBlockHeaderVerbosity1PostAbla extends GetBlockHeaderBase {
 
 /** Returns fee/size statistics for a block. */
 export interface GetBlockStats {
-  method: 'getblockheader';
+  method: 'getblockstats';
   params: [
     hash_or_height: string| number,
     stats?: string[]
